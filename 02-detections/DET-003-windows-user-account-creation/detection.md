@@ -1,62 +1,177 @@
-# DET-003 — Detection Engineering Documentation
+You mean **`detection.md`**, not the README.
 
-## Detection Name
+Here is the **simple and professional content** for `detection.md`, without Markdown code blocks:
 
-Windows User Account Creation
+# DET-003 — Detection Documentation
 
-## Detection ID
+## Detection Overview
 
-DET-003
+DET-003 detects Windows user account creation using Windows Security Event ID `4720`.
+
+User account creation should be monitored because unauthorized accounts can be used to maintain access, establish persistence, or provide additional access to a compromised system.
 
 ---
 
-## Objective
+## Detection Objective
 
-Detect the creation of Windows user accounts and generate a custom Wazuh alert for SOC investigation.
-
-Unauthorized account creation may indicate:
-
-- Unauthorized administrative activity
-- Persistence attempts
-- Privilege abuse
-- Creation of an attacker-controlled account
-
-This detection does not determine whether the activity is malicious. It identifies the event so that an analyst can investigate it.
+The objective of this detection is to identify Windows user account creation events and generate a high-severity alert for SOC investigation.
 
 ---
 
 ## Data Source
 
-| Field | Value |
-|---|---|
-| Operating System | Windows 10 |
-| Log Source | Windows Security Event Log |
-| Event ID | 4720 |
-| Event Provider | Microsoft-Windows-Security-Auditing |
-| SIEM | Wazuh |
-| Endpoint | WIN10-LAB |
+The primary data source for this detection is the Windows Security Event Log.
+
+| Field             | Details                    |
+| ----------------- | -------------------------- |
+| Log Source        | Windows Security           |
+| Event ID          | 4720                       |
+| Event Description | A user account was created |
+| Platform          | Windows 10                 |
 
 ---
 
-## Telemetry
+## Detection Logic
 
-Windows Security Event ID 4720 is generated when a user account is created.
+The detection monitors Windows Security Event ID `4720`.
 
-Important investigation fields include:
+When a new user account is created, Windows generates Event ID `4720`.
 
-- `data.win.eventdata.subjectUserName`
-- `data.win.eventdata.subjectDomainName`
-- `data.win.eventdata.targetUserName`
-- `data.win.eventdata.targetDomainName`
-- `data.win.eventdata.targetSid`
-- `data.win.system.eventID`
-- `data.win.system.systemTime`
+The Wazuh agent collects the event and forwards it to the Wazuh manager.
 
-### Subject Account
+A custom Wazuh rule then matches the event and generates an alert.
 
-The subject account identifies the user responsible for creating the new account.
+Detection flow:
 
-Example:
+Windows User Account Created
+↓
+Windows Security Event ID 4720
+↓
+Wazuh Agent Collects Event
+↓
+Custom Rule 100103 Matches Event
+↓
+Level 10 Alert Generated
 
-```text
-subjectUserName: labadmin
+---
+
+## Wazuh Detection Rule
+
+The custom Wazuh rule used for this detection is:
+
+Rule ID: 100103
+
+Severity Level: 10
+
+Description:
+
+DET-003: Windows user account created
+
+The rule matches Windows Security Event ID `4720`.
+
+---
+
+## Relevant Event Fields
+
+Important fields used during the investigation include:
+
+* `data.win.system.eventID`
+* `data.win.eventdata.subjectUserName`
+* `data.win.eventdata.subjectDomainName`
+* `data.win.eventdata.targetUserName`
+* `data.win.eventdata.targetDomainName`
+* `data.win.eventdata.targetSid`
+
+These fields help identify the account that created the user and the newly created account.
+
+---
+
+## Lab Test
+
+The detection was tested in an isolated Windows 10 lab environment.
+
+A test user account was created using the following command:
+
+`net user DET003-TestUser Password123! /add`
+
+The activity generated Windows Security Event ID `4720`.
+
+The event was collected by the Wazuh agent.
+
+The custom Wazuh rule successfully matched the event and generated a Level 10 alert.
+
+---
+
+## Additional Telemetry
+
+Sysmon Event ID `1` was also collected during testing.
+
+This provided additional process execution context, including:
+
+* Process image
+* Parent process
+* Command line
+* Executing user
+* Process hash
+
+Example process activity:
+
+Process: `net.exe`
+
+Child Process: `net1.exe`
+
+Command:
+
+`net user DET003-TestUser Password123! /add`
+
+This additional telemetry helps analysts understand how the account was created.
+
+---
+
+## Detection Result
+
+The detection successfully identified the Windows user account creation event.
+
+The following telemetry was verified:
+
+* Windows Security Event ID `4720`
+* Wazuh event collection
+* Custom Rule `100103`
+* Level 10 alert
+* Sysmon process execution telemetry
+
+The test was classified as:
+
+**True Positive — Authorized Lab Activity**
+
+---
+
+## Detection Limitations
+
+Event ID `4720` confirms that a user account was created but does not provide complete process execution context.
+
+Additional telemetry, such as Sysmon Event ID `1`, can help identify the process and command responsible for the account creation.
+
+The alert also does not determine whether the activity is authorized or malicious.
+
+SOC investigation and environmental context are required.
+
+---
+
+## MITRE ATT&CK
+
+**Technique:** T1098 — Account Manipulation
+
+Unauthorized account creation or modification can potentially be used to maintain access or establish persistence.
+
+---
+
+## Evidence
+
+Supporting evidence for this detection includes:
+
+* Windows Security Event ID `4720`
+* Wazuh alert generated by Custom Rule `100103`
+* Sysmon Event ID `1`
+* Process command-line telemetry
+* Wazuh custom rule configuration

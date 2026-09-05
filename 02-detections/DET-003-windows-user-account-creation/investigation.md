@@ -1,9 +1,3 @@
-Next is **`investigation.md`**.
-
-This should document the **SOC analyst investigation**, using the actual telemetry you collected: **Event ID 4720, Wazuh alert 100103, and Sysmon Event ID 1**.
-
-Copy and paste the following:
-
 # DET-003 — Investigation Guide
 
 ## Investigation Overview

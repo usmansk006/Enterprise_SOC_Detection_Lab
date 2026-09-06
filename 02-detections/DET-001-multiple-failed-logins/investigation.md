@@ -1,36 +1,34 @@
-# DET-001 — Investigation
+# Investigation — DET-001
 
-## 1. Alert Summary
+## 1. Investigation Objective
 
-A Windows authentication failure was detected on the monitored
-Windows endpoint.
+Investigate a Wazuh alert generated for a failed Windows authentication attempt.
 
-The event was generated as Windows Security Event ID 4625 and was
-collected by the Wazuh Agent.
+The objective is to determine:
 
-Wazuh classified the event using Rule ID 60122:
-
-> Logon Failure - Unknown user or bad password
+* Which account failed to authenticate
+* Where the authentication occurred
+* What source initiated the attempt
+* What type of logon was attempted
+* Whether the activity appears legitimate or suspicious
+* Whether additional authentication events require investigation
 
 ---
 
-## 2. Alert Details
+## 2. Alert Summary
 
-| Field | Value |
-|---|---|
-| Detection | Multiple Failed Windows Logins |
-| Wazuh Rule ID | 60122 |
-| Rule Level | 5 |
-| Windows Event ID | 4625 |
-| Agent ID | 001 |
-| Agent Name | WIN10-LAB |
-| Log Channel | Security |
-| Target Username | labadmin |
-| Workstation | DESKTOP-Q9TN2GI |
-| Authentication Package | Negotiate |
-| Logon Process | User32 |
-| Logon Type | 2 |
-| Source Address | 127.0.0.1 |
+| Field             | Value                                        |
+| ----------------- | -------------------------------------------- |
+| Detection ID      | DET-001                                      |
+| Detection Name    | Failed Windows Authentication                |
+| Wazuh Rule ID     | 60122                                        |
+| Alert Description | Logon Failure - Unknown user or bad password |
+| Rule Level        | 5                                            |
+| Endpoint          | WIN10-LAB                                    |
+| Telemetry Source  | Windows Security Log                         |
+| Windows Event ID  | 4625                                         |
+
+The alert indicates that a Windows authentication attempt failed.
 
 ---
 
@@ -40,169 +38,371 @@ Wazuh classified the event using Rule ID 60122:
 
 A Windows authentication attempt failed.
 
-Windows generated Security Event ID 4625, which indicates that an
-account failed to log on.
+Windows generated:
+
+```text
+Event ID: 4625
+```
+
+This event indicates that an account failed to log on.
 
 ### Where did it happen?
 
-The event originated from the monitored Windows endpoint:
+The event occurred on the monitored Windows endpoint:
 
-`WIN10-LAB`
+```text
+WIN10-LAB
+```
 
-### What account was targeted?
+### Which account was targeted?
 
 The observed target username was:
 
-`labadmin`
+```text
+labadmin
+```
 
 ### What was the source address?
 
-The event reported:
+The observed source address was:
 
-`127.0.0.1`
+```text
+127.0.0.1
+```
 
-This is the local loopback address. Therefore, this particular event
-does not by itself demonstrate that the failed authentication came
-from an external network host.
+This is the local loopback address.
+
+Therefore, the event does not by itself demonstrate an authentication attempt originating from an external network host.
 
 ---
 
-## 4. Evidence Reviewed
+## 4. Alert Details
 
-The investigation was performed using three primary evidence sources.
+| Field                  | Observed Value                |
+| ---------------------- | ----------------------------- |
+| Detection              | Failed Windows Authentication |
+| Wazuh Rule ID          | 60122                         |
+| Rule Level             | 5                             |
+| Windows Event ID       | 4625                          |
+| Agent ID               | 001                           |
+| Agent Name             | WIN10-LAB                     |
+| Log Channel            | Security                      |
+| Target Username        | labadmin                      |
+| Workstation            | DESKTOP-Q9TN2GI               |
+| Authentication Package | Negotiate                     |
+| Logon Process          | User32                        |
+| Logon Type             | 2                             |
+| Source Address         | 127.0.0.1                     |
+
+---
+
+## 5. Initial Assessment
+
+A failed authentication event was successfully detected.
+
+However, a single Windows Event ID `4625` does not automatically indicate:
+
+* Brute-force activity
+* Password spraying
+* Credential compromise
+* Unauthorized access
+
+Additional context is required.
+
+The event should be investigated together with related authentication activity.
+
+---
+
+## 6. Evidence Reviewed
+
+The investigation used the following evidence.
 
 ### Windows Event Viewer
 
-Windows Event Viewer confirmed the presence of Security Event ID 4625.
+Windows Event Viewer confirmed the presence of:
+
+```text
+Windows Security Event ID 4625
+```
 
 Evidence:
 
-`evidence/DET-001-Windows-Event-4625.png`
+```text
+evidence/DET-001-Windows-Event-4625.png
+```
+
+---
 
 ### Wazuh Event Details
 
-The Wazuh event document confirmed that the Windows security telemetry
-was successfully collected by the Wazuh Agent.
+The Wazuh event confirmed that the Windows Security telemetry was collected and processed.
 
 Evidence:
 
-`evidence/DET-001-Wazuh-event-details.png`
+```text
+evidence/DET-001-Wazuh-event-details.png
+```
+
+---
 
 ### Wazuh Detection Rule
 
-Wazuh Rule 60122 classified the event as:
+Wazuh Rule `60122` classified the event as:
 
-`Logon Failure - Unknown user or bad password`
+```text
+Logon Failure - Unknown user or bad password
+```
 
 Evidence:
 
-`evidence/DET-001-Wazuh-detection-rule.png`
+```text
+evidence/DET-001-Wazuh-detection-rule.png
+```
 
 ---
 
-## 5. Investigation Analysis
+## 7. Authentication Analysis
 
-The observed event confirms a failed authentication attempt.
+The failed authentication involved the account:
 
-However, a single Event ID 4625 should not automatically be classified
-as a brute-force attack.
+```text
+labadmin
+```
 
-Additional evidence is required before determining whether the activity
-is malicious.
+The analyst should determine:
 
-The following factors should be examined:
+* Whether the account exists
+* Whether the user was expected to authenticate
+* Whether the account experienced additional failures
+* Whether successful authentication occurred after the failures
+* Whether other accounts were targeted
 
-- Number of authentication failures
-- Frequency of failures
-- Source IP address
-- Target usernames
-- Authentication type
-- Successful logons following failures
-- Related Windows security events
-- Process activity
-- Network activity
-- Activity occurring before and after the alert
+A single failure provides limited information.
+
+Repeated failures would increase the significance of the event.
 
 ---
 
-## 6. False Positive Assessment
+## 8. Source Address Analysis
 
-Potential legitimate explanations include:
+The observed source address was:
 
-- Incorrect password entered by a user
-- Expired credentials
-- Incorrect credentials stored by an application
-- Service authentication failure
-- Scheduled task using outdated credentials
-- Local authentication failure
+```text
+127.0.0.1
+```
 
-Because the observed source address is `127.0.0.1`, local activity
-should be considered during further investigation.
+This represents the local loopback interface.
+
+The event should therefore be interpreted as local activity rather than automatically being considered an external authentication attempt.
+
+Additional investigation should identify:
+
+* The process involved
+* Other local authentication activity
+* Related Windows events
+* Whether the activity was expected
 
 ---
 
-## 7. Analyst Assessment
+## 9. Logon Type Analysis
 
-### Classification
+The observed logon type was:
 
-**Suspicious authentication failure — requires additional investigation**
+```text
+Logon Type: 2
+```
+
+This information should be considered when determining how the authentication attempt occurred.
+
+Authentication context should be reviewed alongside:
+
+* Target account
+* Source address
+* Logon process
+* Authentication package
+* Related authentication events
+
+---
+
+## 10. Investigation Questions
+
+The following questions should be answered during further investigation:
+
+### Account Activity
+
+* Was `labadmin` expected to authenticate?
+* Did the account experience additional failed logons?
+* Did successful authentication occur afterward?
+
+### Source Activity
+
+* Were other source addresses involved?
+* Were multiple authentication failures generated?
+* Was the activity local or remote?
+
+### Timing
+
+* Did failures occur repeatedly?
+* Did failures occur within a short time period?
+* Was the activity outside normal usage patterns?
+
+### Related Events
+
+Investigate:
+
+```text
+Event ID 4625 — Failed Logon
+
+Event ID 4624 — Successful Logon
+```
+
+Correlation between failed and successful authentication events can provide additional context.
+
+---
+
+## 11. Threat Hunting Opportunities
+
+This detection can be expanded into authentication-focused threat hunting.
+
+### Hunt Question 1
+
+> Are there additional Event ID 4625 events on the endpoint?
+
+### Hunt Question 2
+
+> Are multiple usernames experiencing failed authentication attempts?
+
+### Hunt Question 3
+
+> Is the same source generating repeated authentication failures?
+
+### Hunt Question 4
+
+> Does a successful Event ID 4624 occur after repeated failures?
+
+### Hunt Question 5
+
+> Are authentication failures occurring during unusual time periods?
+
+---
+
+## 12. False Positive Analysis
+
+Potential legitimate causes include:
+
+* User entering an incorrect password
+* Expired credentials
+* Incorrect application credentials
+* Misconfigured services
+* Scheduled tasks using outdated credentials
+* Local authentication failures
+
+The event must be evaluated within the operational context.
+
+---
+
+## 13. Investigation Decision
+
+Based on the available evidence, the activity was classified as:
+
+```text
+Suspicious Authentication Failure
+```
 
 ### Confidence
 
-**Low**
+```text
+Low
+```
 
 ### Reason
 
-The event confirms an authentication failure, but the available
-evidence does not establish a confirmed brute-force attack or
-unauthorized access attempt.
+The event confirms a failed authentication attempt.
 
-Additional correlated events would be required to increase confidence.
+However:
 
----
+* Only a single failed authentication event was documented.
+* No repeated authentication failures were demonstrated.
+* No evidence of password guessing was confirmed.
+* The observed source address was `127.0.0.1`.
+* The available evidence does not establish unauthorized access.
 
-## 8. Recommended Next Steps
-
-If additional authentication failures are observed, the following
-investigation should be performed:
-
-1. Identify the total number of Event ID 4625 events.
-2. Determine whether the failures occur repeatedly within a short
-   time period.
-3. Identify the source IP address for each event.
-4. Check whether multiple usernames are being targeted.
-5. Search for successful Event ID 4624 logons following the failures.
-6. Review the associated logon types.
-7. Investigate related process and network activity.
-8. Determine whether the activity is expected or unauthorized.
+Additional correlated authentication events would be required to increase confidence.
 
 ---
 
-## 9. MITRE ATT&CK Relevance
+## 14. Recommended Response
 
-The activity may be relevant to the MITRE ATT&CK credential access
-and brute-force categories if repeated authentication failures are
-identified.
+Because the available evidence does not confirm malicious activity, aggressive containment is not justified.
 
-A specific ATT&CK technique should only be assigned after the observed
-behavior provides sufficient evidence.
+Recommended actions include:
+
+* Search for additional Event ID 4625 events.
+* Review authentication frequency.
+* Identify targeted usernames.
+* Review source addresses.
+* Search for Event ID 4624 following failed authentication.
+* Review related processes and network activity.
+* Determine whether the authentication activity is expected.
 
 ---
 
-## 10. Final Conclusion
+## 15. Investigation Outcome
 
-The SOC laboratory successfully detected and collected a Windows
-authentication failure.
+The investigation confirmed the following detection chain:
 
-The event was confirmed in Windows Event Viewer and subsequently
-identified in Wazuh using Rule 60122.
+```text
+Failed Authentication Attempt
+        ↓
+Windows Security Event ID 4625
+        ↓
+Wazuh Agent Collection
+        ↓
+Wazuh Rule 60122
+        ↓
+Alert Generated
+        ↓
+Authentication Context Reviewed
+        ↓
+Suspicious Activity Requires Additional Correlation
+```
 
-The current evidence is insufficient to classify the activity as a
-confirmed brute-force attack.
+---
 
-The detection is therefore classified as a suspicious authentication
-failure requiring additional investigation.
+## 16. Lessons Learned
 
-This investigation demonstrates the SOC workflow:
+This investigation demonstrates that authentication alerts require correlation and context.
 
-**Detect → Triage → Investigate → Assess → Document**
+A failed authentication event alone does not prove an attack.
+
+Effective authentication investigation requires analysis of:
+
+* Target account
+* Source address
+* Logon type
+* Authentication package
+* Frequency of failures
+* Multiple targeted accounts
+* Successful logons following failures
+* Related system activity
+
+Detection identifies potentially suspicious activity.
+
+Investigation determines whether the activity represents legitimate behavior, misconfiguration, or malicious activity.
+
+---
+
+## Final Status
+
+| Investigation Stage          | Result                            |
+| ---------------------------- | --------------------------------- |
+| Alert Reviewed               | Completed                         |
+| Windows Event Reviewed       | Completed                         |
+| Account Reviewed             | Completed                         |
+| Source Address Reviewed      | Completed                         |
+| Logon Context Reviewed       | Completed                         |
+| Related Event Considerations | Completed                         |
+| Final Classification         | Suspicious Authentication Failure |
+| Confidence                   | Low                               |
+
+**DET-001 Investigation: Completed**

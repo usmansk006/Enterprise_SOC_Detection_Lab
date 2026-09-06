@@ -1,32 +1,3 @@
-# DET-007 — Final Project Structure
-
-```text
-DET-007-suspicious-parent-child-process/
-│
-├── README.md
-├── detection.md
-├── investigation.md
-│
-└── evidence/
-    ├── DET-007-test-execution.png
-    ├── DET-007-sysmon-process-create.png
-    ├── DET-007-wazuh-alert.png
-    └── DET-007-process-investigation.png
-```
-
----
-
-# Step 1 — `README.md`
-
-Create:
-
-```text
-DET-007-suspicious-parent-child-process/README.md
-```
-
-Use:
-
-````markdown
 # DET-007: Suspicious PowerShell Parent-Child Process Execution
 
 ## Overview

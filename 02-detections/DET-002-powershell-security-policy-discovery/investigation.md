@@ -614,32 +614,31 @@ Parent Process
 This would provide more investigation context.
 
 ---
-
 # 20. MITRE ATT&CK Context
 
-The activity involves discovery of system security configuration.
+The observed activity involved the use of the Windows `secedit` utility to export security policy configuration.
 
-The initial Wazuh event was associated with:
+This activity may be relevant to adversary discovery behavior because security policy information can provide useful information about the configuration of a system.
+
+However, the custom Wazuh Rule `100102` does not contain a specific MITRE ATT&CK mapping.
+
+Therefore, this investigation does not assign a specific MITRE ATT&CK technique solely based on the custom detection.
+
+Any MITRE ATT&CK mapping should be based on:
+
+* The exact observed behavior
+* The command arguments
+* The adversary objective
+* Additional correlated activity
+
+The activity should therefore be treated as:
 
 ```text
-Tactic:
-Discovery
+Potential Discovery Activity Requiring Context
 ```
 
-The base Wazuh event included:
+rather than automatically assigning a specific ATT&CK technique.
 
-```text
-Technique:
-T1082 – System Information Discovery
-```
-
-This mapping should be treated carefully.
-
-The custom detection specifically focuses on security policy discovery using `secedit`.
-
-MITRE ATT&CK mappings should reflect the actual adversary behavior being detected and should be reviewed when improving the detection.
-
----
 
 # 21. Key Investigation Lessons
 

@@ -1,0 +1,335 @@
+# Detection Details — DET-008
+
+## 1. Detection Objective
+
+Detect the use of the Windows-native `certutil.exe` utility to decode files.
+
+The objective is to identify potential abuse of CertUtil as a Living Off the Land Binary (LOLBin) by monitoring process execution telemetry.
+
+---
+
+## 2. Threat Behavior
+
+`certutil.exe` is a legitimate Microsoft Windows utility. Although primarily associated with certificate management, it can also decode encoded files.
+
+Attackers may abuse legitimate Windows binaries to perform actions without introducing additional tools onto a system.
+
+The behavior tested in this lab was:
+
+```text
+certutil.exe -decode <encoded_file> <output_file>
+```
+
+---
+
+## 3. Telemetry Source
+
+### Primary Telemetry
+
+**Microsoft Sysmon**
+
+| Field      | Value                                |
+| ---------- | ------------------------------------ |
+| Log Source | Microsoft-Windows-Sysmon/Operational |
+| Event ID   | 1                                    |
+| Event Name | Process Create                       |
+| Platform   | Windows                              |
+
+Sysmon Event ID 1 records process creation activity and provides important process context.
+
+---
+
+## 4. Relevant Telemetry Fields
+
+The following fields are important during detection and investigation:
+
+```text
+win.system.eventID
+win.eventdata.image
+win.eventdata.commandLine
+win.eventdata.parentImage
+win.eventdata.parentCommandLine
+win.eventdata.user
+win.eventdata.processGuid
+win.eventdata.parentProcessGuid
+win.eventdata.hashes
+```
+
+### Key Detection Fields
+
+| Field                       | Purpose                                  |
+| --------------------------- | ---------------------------------------- |
+| `win.eventdata.image`       | Identifies the executed process          |
+| `win.eventdata.commandLine` | Identifies CertUtil arguments            |
+| `win.eventdata.parentImage` | Identifies the parent process            |
+| `win.eventdata.user`        | Identifies the executing user            |
+| `win.system.eventID`        | Confirms Sysmon Process Create telemetry |
+
+---
+
+## 5. Detection Platform
+
+**Wazuh**
+
+The Windows endpoint sends Sysmon Event ID 1 telemetry to the Wazuh manager.
+
+The detection used a built-in Wazuh rule.
+
+| Field            | Value                    |
+| ---------------- | ------------------------ |
+| Wazuh Rule ID    | 92072                    |
+| Rule Description | Certutil decoding a file |
+| Rule Level       | 4                        |
+| Detection Type   | Built-in Wazuh Rule      |
+
+---
+
+## 6. Detection Logic
+
+The built-in Wazuh rule detects CertUtil decoding activity based on the process command line.
+
+Detection logic:
+
+```text
+Sysmon Event ID 1
+        ↓
+Process Creation Event
+        ↓
+Command Line Contains:
+certutil.exe ... -decode
+        ↓
+Wazuh Rule 92072
+        ↓
+Certutil decoding a file
+```
+
+The detection focuses on the use of the `-decode` argument.
+
+---
+
+## 7. Detection Rule
+
+The built-in Wazuh detection logic associated with the test is:
+
+```text
+Rule ID: 92072
+
+Telemetry:
+Sysmon Event ID 1
+
+Condition:
+Command line contains CertUtil execution
+with the -decode argument
+
+Alert:
+Certutil decoding a file
+```
+
+This project validates an existing Wazuh detection rather than creating a custom rule.
+
+---
+
+## 8. MITRE ATT&CK Mapping
+
+### T1140 — Deobfuscate/Decode Files or Information
+
+The observed behavior involves decoding an encoded file.
+
+| ATT&CK Field | Value                                   |
+| ------------ | --------------------------------------- |
+| Tactic       | Defense Evasion                         |
+| Technique ID | T1140                                   |
+| Technique    | Deobfuscate/Decode Files or Information |
+
+The test used a harmless Base64-encoded file.
+
+---
+
+## 9. Test Procedure
+
+The detection was tested in an authorized lab environment.
+
+### Step 1 — Create a Test Directory
+
+```cmd
+mkdir C:\Temp
+```
+
+### Step 2 — Create a Harmless Test File
+
+```cmd
+echo DET008-TEST > C:\Temp\det008.txt
+```
+
+### Step 3 — Create Base64 Content
+
+A harmless Base64-encoded test file was created using PowerShell.
+
+### Step 4 — Execute CertUtil Decoding
+
+The encoded test file was decoded using:
+
+```text
+certutil.exe -decode C:\Temp\det008.b64 C:\Temp\det008-decoded.txt
+```
+
+### Step 5 — Validate Telemetry
+
+Confirm that Sysmon generated:
+
+```text
+Event ID: 1
+```
+
+### Step 6 — Validate Detection
+
+Confirm that Wazuh generated:
+
+```text
+Rule ID: 92072
+Description: Certutil decoding a file
+```
+
+---
+
+## 10. Evidence
+
+The detection was validated using the following evidence.
+
+### Test Execution
+
+```text
+evidence/DET-008-01-test-execution.png
+```
+
+Shows the authorized CertUtil test execution.
+
+### Sysmon Telemetry
+
+```text
+evidence/DET-008-02-sysmon-telemetry.png
+```
+
+Shows Sysmon Event ID 1 process creation telemetry.
+
+### Wazuh Alert
+
+```text
+evidence/DET-008-03-wazuh-alert.png
+```
+
+Shows the Wazuh alert generated by Rule 92072.
+
+### Event Details
+
+```text
+evidence/DET-008-04-event-details.png
+```
+
+Shows detailed event and detection information.
+
+---
+
+## 11. Detection Validation
+
+The following detection chain was successfully validated:
+
+```text
+[Test Execution]
+      ↓
+certutil.exe -decode
+      ↓
+[Sysmon]
+Event ID 1
+      ↓
+[Wazuh Agent]
+Telemetry Forwarded
+      ↓
+[Wazuh Analysis]
+Rule 92072 Matched
+      ↓
+[Alert]
+Certutil decoding a file
+```
+
+---
+
+## 12. False Positives
+
+CertUtil usage is not automatically malicious.
+
+Potential legitimate activity includes:
+
+* Administrative operations
+* Authorized scripts
+* Software deployment
+* Troubleshooting
+* Security testing
+* File decoding performed by approved applications
+
+The surrounding context must be investigated before classifying the event as malicious.
+
+---
+
+## 13. Detection Limitations
+
+This detection has several limitations:
+
+* It focuses specifically on CertUtil decoding behavior.
+* Legitimate CertUtil activity may trigger alerts.
+* Other decoding utilities are not covered.
+* Detection depends on Sysmon Event ID 1 telemetry.
+* Missing command-line telemetry can reduce visibility.
+* The decoded file's contents are not automatically classified as malicious.
+
+---
+
+## 14. Tuning Recommendations
+
+Potential tuning improvements include:
+
+* Monitoring unusual parent processes.
+* Reviewing the executing user.
+* Identifying unusual output directories.
+* Correlating CertUtil activity with subsequent process execution.
+* Reviewing hashes of decoded files.
+* Investigating repeated CertUtil execution.
+
+Exclusions should only be implemented after confirming legitimate and recurring behavior.
+
+---
+
+## 15. Retest Results
+
+The detection was retested after initial validation.
+
+The complete telemetry and detection pipeline was successfully confirmed:
+
+```text
+CertUtil Execution
+        ↓
+Sysmon Event ID 1
+        ↓
+Wazuh Receives Telemetry
+        ↓
+Rule 92072 Matches
+        ↓
+Alert Generated
+```
+
+**Retest Result: Successful**
+
+---
+
+## 16. Detection Status
+
+| Validation Stage           | Result     |
+| -------------------------- | ---------- |
+| Test Execution             | Successful |
+| Sysmon Telemetry           | Successful |
+| Wazuh Telemetry Processing | Successful |
+| Rule 92072 Detection       | Successful |
+| Alert Generation           | Successful |
+| Retest                     | Successful |
+
+**Final Status: DET-008 Successfully Validated**

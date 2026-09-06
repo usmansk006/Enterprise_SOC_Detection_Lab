@@ -115,31 +115,3 @@ The test successfully demonstrated the detection of a PowerShell process spawnin
 Sysmon generated the endpoint telemetry, and Wazuh successfully identified the parent-child relationship.
 
 The investigation confirmed the execution chain and collected relevant process context for further analysis.
-
-````
-
----
-
-# Screenshot placement in README
-
-Add this section at the bottom:
-
-```markdown
-## Evidence Screenshots
-
-### Test Execution
-
-![DET-007 Test Execution](evidence/DET-007-test-execution.png)
-
-### Sysmon Telemetry
-
-![DET-007 Sysmon Event](evidence/DET-007-sysmon-process-create.png)
-
-### Wazuh Detection
-
-![DET-007 Wazuh Alert](evidence/DET-007-wazuh-alert.png)
-
-### Investigation
-
-![DET-007 Investigation](evidence/DET-007-process-investigation.png)
-

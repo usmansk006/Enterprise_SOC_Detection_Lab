@@ -1,0 +1,23 @@
+Authorized Activity
+        ↓
+Windows Endpoint
+ ├── Windows Security Logs
+ └── Sysmon
+        ↓
+   Wazuh Agent
+        ↓
+   Wazuh Manager
+        ↓
+ Detection Processing
+        ↓
+ Wazuh Dashboard
+        ↓
+ ┌──────┼─────────┐
+ ↓      ↓         ↓
+Hunting Investigation Response
+        ↓
+Forensics / Threat Intelligence
+        ↓
+Detection Engineering
+        ↓
+Tuning → Regression Testing → Retesting

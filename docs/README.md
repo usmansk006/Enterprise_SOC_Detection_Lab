@@ -2,7 +2,7 @@
 
 **Project:** SOC Detection Lab  
 **Focus:** Windows Security Monitoring and Threat Detection  
-**Virtualization:** VMware  
+**Virtualization:** VMware   
 **Virtual Machines:** Ubuntu Server and Windows 10  
 **Monitoring Platform:** Wazuh
 

@@ -8,7 +8,7 @@
 4. Review the default event log channel for process creation and network connection data.
 
 ## Verification steps
-
+ 
 Use a controlled test host and confirm:
 
 - `Event ID 1` appears for process creation,

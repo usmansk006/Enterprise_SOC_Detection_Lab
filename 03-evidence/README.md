@@ -117,3 +117,39 @@ When adding a new artifact:
 6. Commit the artifact and documentation together when practical.
 
 The objective is a reproducible, technically accurate evidence repository that supports the SOC Detection Lab without overstating its implementation or validation status.
+
+## 9. Detection-to-Evidence Mapping
+
+This section maps the existing detection directories to the evidence needed to assess their implementation and validation status.
+
+The detection directory names identify the intended detection scenarios. They do not independently establish successful alert generation or validation.
+
+| Detection ID | Detection scenario | Evidence to collect or reference | Validation status |
+|---|---|---|---|
+| DET-001 | Multiple failed logins | Relevant Windows authentication events and a matching alert, if available | Not yet confirmed |
+| DET-002 | PowerShell security-policy discovery | Relevant PowerShell event records and a matching alert, if available | Not yet confirmed |
+| DET-003 | Windows user account creation | Windows account-management event and a matching alert, if available | Not yet confirmed |
+| DET-004 | Scheduled task creation | Relevant task-creation event and a matching alert, if available | Not yet confirmed |
+| DET-005 | Suspicious PowerShell encoded command | Relevant PowerShell event record and a matching alert, if available | Not yet confirmed |
+| DET-006 | Windows Defender malware detection | Actual Defender detection event and a matching alert, if available | Not yet confirmed |
+| DET-007 | Suspicious parent-child process | Process telemetry showing the relevant parent-child relationship and a matching alert, if available | Not yet confirmed |
+| DET-008 | CertUtil LOLBin file decoding | Relevant process or command-line telemetry and a matching alert, if available | Not yet confirmed |
+
+### Evidence classification
+
+Use the following distinctions when updating this mapping:
+
+- **Configuration evidence:** The detection rule or relevant configuration exists in the repository.
+- **Event evidence:** The underlying Windows or endpoint event was observed.
+- **Alert evidence:** The monitoring platform generated a corresponding alert.
+- **Validation evidence:** A documented test and its observed outcome support the detection's expected behavior.
+
+A detection may have configuration evidence without event, alert, or validation evidence.
+
+### Current status
+
+The infrastructure screenshots in this directory document the lab environment and selected component states. They should not be treated as proof that any of the eight detection scenarios generated an alert.
+
+Update each detection's status only when its actual configuration, event records, alert output, or test results have been reviewed.
+
+Do not claim successful detection or validation when supporting evidence is unavailable.

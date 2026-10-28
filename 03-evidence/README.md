@@ -1,93 +1,119 @@
-# Evidence and Validation
+# SOC Detection Lab — Evidence Repository
 
-This directory stores supporting evidence for the SOC Detection Lab, including screenshots, alert records, detection-validation results, and relevant investigation artifacts.
+This directory contains supporting evidence for the SOC Detection Lab, a virtualized Windows security-monitoring environment built around Wazuh.
 
-Evidence should demonstrate what was configured, what activity was observed, and whether the corresponding detection behaved as expected.
+The evidence documents the lab environment, Windows agent service state, Wazuh server component status, and agent connectivity where demonstrated by the available artifacts.
+
+Evidence is intended to support transparent technical documentation. The presence of a screenshot does not, by itself, establish successful end-to-end monitoring or detection validation.
 
 ## 1. Evidence Objectives
 
-The evidence repository is intended to demonstrate:
+This directory supports the following documentation goals:
 
-- Lab environment and monitoring configuration.
-- Windows security events and relevant telemetry.
-- Wazuh alerts associated with existing detection rules.
-- Detection-validation procedures and observed outcomes.
-- Investigation context and technical analysis.
-- Limitations, troubleshooting findings, and validation status.
+- Record the virtualized lab environment.
+- Document the observed state of the Windows Wazuh Agent service.
+- Record Wazuh server-side component status.
+- Preserve evidence related to agent connectivity.
+- Establish a foundation for future detection-validation records.
+- Distinguish observed facts from assumptions and unverified functionality.
 
-## 2. Evidence Categories
+## 2. Evidence Inventory
 
-Organize evidence into the following categories as genuine artifacts become available.
+| Evidence file | Purpose | Interpretation and limitations |
+|---|---|---|
+| `vmware-lab-architecture.png` | Documents the VMware lab layout. | Supports descriptions of virtual machines and their visible arrangement. Does not prove network connectivity or successful monitoring. |
+| `wazuh-agent-service.png` | Documents the Windows Wazuh Agent service. | Records the service state visible at capture time. A running service alone does not prove communication with the manager. |
+| `wazuh-agent-connected.png` | Intended to document Windows agent connectivity with Wazuh. | Use as connectivity evidence only if the screenshot visibly demonstrates a connected or active agent state through an appropriate Wazuh status view or equivalent evidence. |
+| `wazuh-core-services-status.png` | Documents Wazuh component service status on Ubuntu Server. | Records the states visible in the captured output. Does not independently prove that the complete monitoring pipeline is operational. |
 
-| Category | Evidence to collect |
+These descriptions identify the intended purpose of each artifact. Claims must be adjusted if the actual screenshot contents do not support them.
+
+## 3. Lab Environment Context
+
+The lab uses VMware to host virtual machines for security monitoring and investigation.
+
+| Component | Role |
 |---|---|
-| Lab environment | VMware lab configuration and relevant VM details |
-| Agent and connectivity | Wazuh agent status and connection evidence, when available |
-| Authentication | Relevant Windows authentication events and associated alerts |
-| PowerShell | Relevant PowerShell event records and corresponding alerts |
-| Account activity | Evidence of account-related events and matching alerts |
-| Scheduled tasks | Relevant task-creation events and corresponding alerts |
-| Defender detections | Actual Defender event records and matching alerts, if observed |
-| Other detections | Evidence mapped to the existing detection rules in this repository |
+| Ubuntu Server VM | Intended Wazuh server-side environment |
+| Windows 10 VM | Endpoint used for Windows security monitoring |
+| Wazuh Agent | Endpoint component intended to forward supported telemetry |
+| Wazuh Manager | Server-side component responsible for processing events and evaluating applicable detection rules |
 
-Only collect categories relevant to the detections and components actually present in the lab.
+The actual installation and operational state of each component must be established from available evidence. The presence of a component in the architecture does not establish that it is currently running or communicating successfully.
 
-## 3. Recommended File-Naming Convention
+## 4. Evidence Interpretation
 
-Use descriptive filenames that identify the detection or activity and the evidence type.
+### 4.1 VMware lab environment
 
-Examples:
+`vmware-lab-architecture.png` documents the visible virtual-machine arrangement. Use it as environmental context rather than proof of successful event collection.
 
-- `lab-environment-overview.png`
-- `wazuh-agent-status.png`
-- `authentication-failure-event.png`
-- `powershell-detection-alert.png`
-- `scheduled-task-event.png`
-- `detection-validation-notes.md`
+### 4.2 Windows Wazuh Agent service
 
-These are naming examples, not claims that the files already exist.
+`wazuh-agent-service.png` records the Windows service state shown in the screenshot. A running service is a useful operational indicator, but it is not equivalent to confirmed manager connectivity.
 
-## 4. Evidence Requirements
+### 4.3 Agent connectivity
 
-For each detection-validation exercise, record the following where applicable:
+`wazuh-agent-connected.png` is intended to support agent-connectivity documentation. Before describing the agent as connected, verify that the screenshot shows an explicit connected or active status from an appropriate source.
 
-1. **Objective:** What behavior or event is being examined?
-2. **Environment:** Which endpoint and relevant components were involved?
-3. **Procedure:** What action or test was performed?
-4. **Expected result:** What event or alert was expected?
-5. **Observed result:** What actually happened?
-6. **Evidence:** Which screenshot, event record, or log supports the observation?
-7. **Conclusion:** Was the detection validated, partially validated, not triggered, or not tested?
+If it shows only the Windows service running, describe it as service-status evidence instead.
 
-Redact passwords, access tokens, personal information, and other sensitive data before publishing evidence.
+### 4.4 Wazuh server components
 
-## 5. Validation Status Definitions
+`wazuh-core-services-status.png` documents the service states visible in the Ubuntu Server output. Missing, stopped, failed, and running components should be recorded accurately.
 
-Use these labels consistently in the project documentation.
+Service status is time-specific. A historical screenshot should not be presented as proof of current availability.
 
-- **Implemented:** The relevant configuration or detection rule exists in the repository.
+## 5. Detection Evidence and Validation
+
+The screenshots in this directory primarily document infrastructure and component status. They do not independently establish that an existing detection rule successfully generated an alert.
+
+For each detection-validation exercise, record:
+
+1. **Detection objective:** The behavior or event being examined.
+2. **Test conditions:** The environment and procedure used.
+3. **Expected behavior:** The event or alert expected from the existing detection.
+4. **Observed behavior:** What actually occurred.
+5. **Supporting artifact:** The relevant event record, alert, screenshot, or log.
+6. **Conclusion:** The result supported by the collected evidence.
+
+Use these validation labels consistently:
+
+- **Implemented:** The relevant detection configuration or rule exists.
 - **Observed:** The relevant event or alert was actually seen.
-- **Validated:** Evidence confirms that the detection behaved as expected under the documented test conditions.
+- **Validated:** Evidence confirms expected detection behavior under documented test conditions.
 - **Partially validated:** Some expected behavior was confirmed, but validation remains incomplete.
-- **Not validated:** The required evidence is not yet available or testing has not confirmed the result.
+- **Not validated:** Testing or supporting evidence has not confirmed the expected behavior.
 
 Do not mark a detection as validated solely because its rule file exists.
 
-## 6. Current Evidence Status
+## 6. Evidence Handling Standards
 
-The evidence directory is being prepared for documented, verifiable artifacts. Until actual evidence files are added, no screenshots, alert records, or validation results should be assumed to exist.
+- Preserve original screenshots where possible.
+- Use descriptive filenames that accurately represent their contents.
+- Record the capture date and environment details when known.
+- Redact credentials, tokens, and sensitive personal information before publication.
+- Avoid altering screenshots in ways that change their technical meaning.
+- Keep expected results separate from observed results.
+- Do not present historical screenshots as proof of current operational status.
+- Update this inventory when evidence is added, replaced, or reclassified.
 
-The operational status of the Wazuh components must be confirmed before collecting evidence that depends on them.
+## 7. Current Scope and Limitations
 
-## 7. Publishing Checklist
+This directory provides supporting evidence for the documented lab environment and its observable component states.
 
-Before committing an evidence artifact:
+The available screenshots must be evaluated individually before making claims about agent connectivity, event ingestion, alert generation, or detection effectiveness.
 
-- [ ] Confirm that it came from the actual lab.
-- [ ] Ensure that its filename describes the contents accurately.
-- [ ] Remove sensitive information.
-- [ ] Record the related detection or validation activity.
-- [ ] Distinguish expected results from observed results.
-- [ ] Update the relevant project documentation when appropriate.
+Where evidence is missing or inconclusive, the relevant capability should be described as unverified rather than assumed to be functional.
 
-Evidence should be reproducible, technically relevant, and consistent with the implementation documented in this repository.
+## 8. Evidence Maintenance
+
+When adding a new artifact:
+
+1. Confirm that it originates from the actual lab.
+2. Choose a filename that reflects the contents.
+3. Check for sensitive information.
+4. Update the evidence inventory.
+5. Document what the artifact proves and what it does not prove.
+6. Commit the artifact and documentation together when practical.
+
+The objective is a reproducible, technically accurate evidence repository that supports the SOC Detection Lab without overstating its implementation or validation status.

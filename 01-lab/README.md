@@ -1,683 +1,155 @@
-# SOC Detection, Threat Hunting & Incident Response Lab
+# SOC Detection Lab — Laboratory Environment and Architecture
 
-## 1. Overview
+## 1. Project Overview
 
-The `01-lab` directory documents the laboratory environment supporting the **Enterprise SOC Detection, Threat Hunting & Incident Response Lab**.
+The SOC Detection Lab is a practical blue-team project focused on Windows security monitoring and threat detection using Wazuh.
 
-The environment provides an isolated platform for security telemetry collection, detection engineering, alert investigation, threat hunting, incident response, forensic analysis, network security monitoring, threat intelligence enrichment, and security automation.
+The laboratory provides the technical foundation for the completed detection implementations maintained in this repository. It documents the relationship between endpoint security telemetry, event processing, detection rules, and generated security alerts.
 
-The laboratory is designed around an end-to-end Security Operations Center workflow:
+The project demonstrates core SOC monitoring concepts through documented detection use cases, their technical implementation, and the available supporting evidence.
 
-```text
-TELEMETRY
-    ↓
-DETECTION
-    ↓
-ALERT TRIAGE
-    ↓
-INVESTIGATION
-    ↓
-THREAT HUNTING
-    ↓
-INCIDENT RESPONSE
-    ↓
-FORENSICS
-    ↓
-THREAT INTELLIGENCE
-    ↓
-DETECTION GAP ANALYSIS
-    ↓
-TUNING
-    ↓
-REGRESSION TESTING
-    ↓
-RETESTING
-    ↓
-CONTINUOUS IMPROVEMENT
-```
+## 2. Project Objectives and Deliverables
 
-The lab is intentionally structured to demonstrate how security telemetry is transformed into actionable detections and investigation outcomes.
+The project brings together the following deliverables:
 
----
+- A documented laboratory architecture for the existing detection environment.
+- Documentation of the relevant Windows security telemetry sources.
+- A structured collection of completed detection implementations.
+- Technical explanations of the suspicious behaviors targeted by each detection.
+- Documentation of the relationship between collected events and detection logic.
+- References to available screenshots, alert records, and configuration artifacts.
+- A consolidated detection inventory and relevant MITRE ATT&CK mappings.
 
-# 2. Laboratory Objectives
+The documentation reflects the implementation and evidence available in the repository. Individual claims are supported by the corresponding detection files and artifacts where available.
 
-The laboratory provides the infrastructure required to:
+## 3. Laboratory Architecture
 
-* Centralize security telemetry.
-* Monitor Windows endpoint activity.
-* Collect Windows Security Event Logs.
-* Collect Sysmon endpoint telemetry.
-* Develop and validate security detections.
-* Investigate security alerts.
-* Perform behavioral threat hunting.
-* Map activity to MITRE ATT&CK.
-* Develop incident response workflows.
-* Perform endpoint forensic analysis.
-* Analyze network security telemetry.
-* Enrich investigations with threat intelligence.
-* Automate repetitive security operations tasks.
-* Measure detection coverage and effectiveness.
-* Identify detection gaps.
-* Tune detection logic.
-* Perform regression testing.
-* Maintain reproducible investigation evidence.
-
-The laboratory therefore functions as the technical foundation for the remainder of the repository.
-
----
-
-# 3. Laboratory Architecture
-
-The core environment consists of:
-
-| Component                | Role                                               |
-| ------------------------ | -------------------------------------------------- |
-| Ubuntu Server            | Security monitoring infrastructure                 |
-| Wazuh Manager            | Centralized telemetry processing and detection     |
-| Wazuh Dashboard          | SOC analyst monitoring and investigation interface |
-| Windows 10 Endpoint      | Primary monitored endpoint                         |
-| Wazuh Agent              | Endpoint telemetry collection and forwarding       |
-| Windows Security Logs    | Native Windows security telemetry                  |
-| Sysmon                   | Detailed endpoint and process telemetry            |
-| Kali Linux               | Authorized security activity simulation            |
-| Network Analysis Tooling | Network telemetry analysis and investigation       |
-
-The high-level architecture is:
+The laboratory uses a Wazuh-based monitoring workflow to process configured endpoint telemetry and identify security-relevant activity.
 
 ```text
-                   ┌─────────────────────────┐
-                   │   Authorized Activity   │
-                   │                         │
-                   │   Controlled Testing    │
-                   └────────────┬────────────┘
-                                │
-                                ▼
-                   ┌─────────────────────────┐
-                   │    Windows Endpoint     │
-                   │                         │
-                   │ Windows Security Logs   │
-                   │ Sysmon Telemetry        │
-                   │ Process Activity        │
-                   │ PowerShell Activity     │
-                   └────────────┬────────────┘
-                                │
-                                ▼
-                   ┌─────────────────────────┐
-                   │      Wazuh Agent        │
-                   │                         │
-                   │ Telemetry Collection    │
-                   │ Event Forwarding        │
-                   └────────────┬────────────┘
-                                │
-                                ▼
-                   ┌─────────────────────────┐
-                   │     Wazuh Manager       │
-                   │                         │
-                   │ Event Processing        │
-                   │ Detection Rules         │
-                   │ Alert Generation        │
-                   └────────────┬────────────┘
-                                │
-                                ▼
-                   ┌─────────────────────────┐
-                   │    Wazuh Dashboard      │
-                   │                         │
-                   │ Alert Triage            │
-                   │ Investigation            │
-                   │ Event Analysis           │
-                   └────────────┬────────────┘
-                                │
-              ┌─────────────────┼─────────────────┐
-              │                 │                 │
-              ▼                 ▼                 ▼
-        Threat Hunting    Investigations    Incident Response
-              │                 │                 │
-              └─────────────────┼─────────────────┘
-                                ▼
-                   ┌─────────────────────────┐
-                   │ Detection Engineering  │
-                   │                         │
-                   │ Tuning                  │
-                   │ Gap Analysis            │
-                   │ Regression Testing      │
-                   └─────────────────────────┘
+┌─────────────────────────────────┐
+│       Windows Endpoint          │
+│                                 │
+│  Windows Security Telemetry     │
+│  Configured Endpoint Events     │
+└────────────────┬────────────────┘
+                 │
+                 ▼
+┌─────────────────────────────────┐
+│          Wazuh Agent            │
+│                                 │
+│  Configured Event Collection    │
+│  Telemetry Forwarding           │
+└────────────────┬────────────────┘
+                 │
+                 ▼
+┌─────────────────────────────────┐
+│         Wazuh Manager           │
+│                                 │
+│  Event Processing               │
+│  Detection Rule Evaluation      │
+│  Security Alert Generation      │
+└────────────────┬────────────────┘
+                 │
+                 ▼
+┌─────────────────────────────────┐
+│        Wazuh Dashboard          │
+│                                 │
+│  Alert Review                   │
+│  Security Event Analysis        │
+└─────────────────────────────────┘
 ```
 
-The detailed architecture is maintained under:
+The diagram represents the documented logical monitoring workflow. Component-specific details should match the actual deployment and the records retained from the completed lab.
 
-```text
-01-lab/architecture/
-```
+## 4. Monitoring Components
 
----
+| Component | Function |
+|---|---|
+| Windows endpoint | Produces the operating-system and security activity covered by the detection use cases. |
+| Wazuh Agent | Collects and forwards configured endpoint telemetry. |
+| Wazuh Manager | Processes received events and evaluates applicable detection rules. |
+| Wazuh Dashboard | Provides access to available alerts and security-event information. |
+| Detection rules | Identify the security-relevant behaviors covered by the completed implementations. |
 
-# 4. Telemetry Architecture
+The table describes the roles of the components in the documented architecture. Specific versions and deployment settings are recorded only where supported by existing configuration or evidence.
 
-The laboratory uses multiple telemetry sources to provide behavioral visibility across the monitored environment.
+## 5. Telemetry Processing and Detection Workflow
 
-## Windows Security Event Logs
+The detection workflow is organized around the following sequence:
 
-Windows Security Event Logs provide native operating-system security telemetry.
+1. **Event generation:** Security-relevant activity occurs on the monitored endpoint.
+2. **Telemetry collection:** Configured event sources record relevant activity.
+3. **Event forwarding:** The Wazuh Agent forwards configured telemetry to the monitoring infrastructure.
+4. **Event processing:** The Wazuh Manager processes the received events.
+5. **Rule evaluation:** Applicable detection rules evaluate events against their configured conditions.
+6. **Alert generation:** Matching activity produces alerts when the rule conditions are satisfied.
+7. **Analyst review:** Available alerts provide a starting point for examining the detected behavior.
 
-The environment supports analysis of security-relevant activity including:
+The actual event source, rule logic, and alert fields are documented at the individual detection level.
 
-* Authentication events.
-* Failed authentication.
-* Account management.
-* User creation.
-* Security policy activity.
-* Other configured security events.
+## 6. Implemented Detection Coverage
 
-These events provide foundational identity and operating-system security context.
+The repository contains completed detection work covering selected Windows security behaviors.
 
----
+The known areas of coverage include:
 
-## Sysmon Telemetry
+- Failed authentication attempts.
+- Suspicious PowerShell activity.
+- Windows account creation.
+- Scheduled-task creation.
+- Encoded PowerShell execution.
+- Microsoft Defender malware detections.
+- Suspicious parent-child process relationships.
+- CertUtil-based decoding activity.
 
-Sysmon provides detailed endpoint telemetry that supplements native Windows event logging.
+These categories should be reconciled with the current detection inventory. Each detection should link to its actual rule, explanation, and available supporting evidence.
 
-Relevant telemetry includes:
+## 7. Detection Documentation and Traceability
 
-* Process creation.
-* Process termination.
-* Parent-child process relationships.
-* Command-line information.
-* Network-related process activity when configured.
-* Additional endpoint activity based on the active Sysmon configuration.
+Each detection should provide a consistent record of its purpose and implementation.
 
-Sysmon is used as an **endpoint telemetry source** and is not treated as a full EDR platform.
+| Documentation element | Expected content |
+|---|---|
+| Detection objective | Security behavior the detection is intended to identify. |
+| Data source | Windows event source or other telemetry used by the rule. |
+| Detection logic | Existing Wazuh rule or relevant implementation reference. |
+| Alert interpretation | Meaning of the relevant alert fields and conditions. |
+| ATT&CK mapping | Applicable technique and a justification for the mapping. |
+| False-positive considerations | Plausible legitimate activity that may trigger the rule. |
+| Evidence references | Links to existing screenshots, alert records, or configuration artifacts. |
+| Validation record | Previously documented test procedure and actual result, where available. |
 
----
+This structure supports traceability between the implementation, its intended behavior, and the evidence retained in the repository.
 
-## Wazuh Telemetry Processing
+## 8. Evidence and Validation Records
 
-The Wazuh Agent collects configured endpoint telemetry and forwards it to the Wazuh Manager.
+Evidence is an important part of the project because it allows reviewers to distinguish documented functionality from unverified claims.
 
-The Wazuh Manager processes incoming events and applies detection logic to identify security-relevant behavior.
+The evidence record should reference artifacts such as:
 
-The resulting alerts are made available through the Wazuh Dashboard for analyst investigation.
+- Existing Wazuh alert screenshots.
+- Relevant detection-rule configuration.
+- Available Windows event records.
+- Recorded examples of matching alerts.
+- Existing validation notes or test records.
+- Supporting configuration details.
 
----
+Each artifact should identify the detection it supports and explain what it demonstrates.
 
-# 5. Detection Workflow
+A screenshot of a rule proves that the rule configuration is documented; it does not, by itself, prove that the rule generated an alert. Similarly, an alert screenshot demonstrates a recorded alert, while a successful validation claim requires evidence connecting the relevant activity to the expected detection outcome.
 
-The laboratory implements a complete detection workflow:
+Historical evidence from the completed lab can be retained even if the environment is no longer available for additional testing.
 
-```text
-Security Activity
-       ↓
-Endpoint Telemetry
-       ↓
-Wazuh Collection
-       ↓
-Event Processing
-       ↓
-Detection Rule
-       ↓
-Alert Generation
-       ↓
-Alert Triage
-       ↓
-Investigation
-       ↓
-Threat Hunting
-       ↓
-Response
-       ↓
-Detection Improvement
-       ↓
-Regression Testing
-       ↓
-Retesting
-```
+## 9. Technical Accuracy and Limitations
 
-Detection content is maintained under:
+The documentation distinguishes between implemented detection logic, recorded observations, and capabilities that have not been independently verified.
 
-```text
-02-detections/
-```
+- Existing detection rules are documented from their actual implementation.
+- Historical alerts and screenshots are identified as retained evidence.
+- Configuration details are included when supported by available records.
+- Validation results are reported only when documented evidence supports them.
+- Current operational status is not inferred from historical screenshots.
+- Detection coverage is limited to the behaviors represented by the existing rules.
 
-Detection engineering methodology, rules, Sigma content, test cases, and regression testing are maintained under:
-
-```text
-05-detection-engineering/
-```
-
----
-
-# 6. Threat Hunting
-
-The laboratory supports proactive threat hunting in addition to alert-driven investigation.
-
-Threat hunting activities use behavioral hypotheses to search available telemetry for:
-
-* Suspicious PowerShell activity.
-* Credential-related behavior.
-* Persistence mechanisms.
-* Lateral movement indicators.
-* Suspicious processes.
-* Network activity.
-* Other ATT&CK-aligned behaviors.
-
-Threat hunting documentation is maintained under:
-
-```text
-03-threat-hunting/
-```
-
-The hunting process follows:
-
-```text
-Hunting Hypothesis
-        ↓
-ATT&CK Technique
-        ↓
-Required Telemetry
-        ↓
-Hunting Query
-        ↓
-Event Analysis
-        ↓
-Correlation
-        ↓
-Finding
-        ↓
-Detection Gap Analysis
-```
-
----
-
-# 7. Incident Investigation
-
-Detected security activity is investigated using a structured SOC investigation methodology.
-
-The investigation process includes:
-
-1. Alert intake.
-2. Initial triage.
-3. Alert validation.
-4. Timeline construction.
-5. User and host context analysis.
-6. Process analysis.
-7. Command-line analysis.
-8. Supporting-event correlation.
-9. MITRE ATT&CK mapping.
-10. Scope assessment.
-11. Evidence collection.
-12. Response determination.
-13. Documentation.
-14. Detection improvement.
-
-Investigation cases are maintained under:
-
-```text
-04-Incident-Investigations/
-```
-
-Each investigation is designed to demonstrate analyst reasoning rather than simply displaying an alert screenshot.
-
----
-
-# 8. Incident Response
-
-The incident response layer connects detection and investigation activities to structured response procedures.
-
-The response workflow includes:
-
-```text
-Detection
-   ↓
-Triage
-   ↓
-Investigation
-   ↓
-Scoping
-   ↓
-Containment
-   ↓
-Eradication
-   ↓
-Recovery
-   ↓
-Post-Incident Review
-   ↓
-Detection Improvement
-```
-
-Response playbooks, procedures, and templates are maintained under:
-
-```text
-06-incident-response/
-```
-
----
-
-# 9. Digital Forensics
-
-The laboratory includes a forensic analysis layer for investigations requiring deeper endpoint examination.
-
-Forensic analysis can incorporate:
-
-* Windows Event Logs.
-* PowerShell artifacts.
-* Registry artifacts.
-* Prefetch artifacts.
-* Persistence artifacts.
-* Process timelines.
-* Other relevant endpoint evidence.
-
-Forensic material is maintained under:
-
-```text
-07-forensics/
-```
-
-The forensic capability complements SIEM-based investigation by providing additional evidence when alert telemetry alone is insufficient.
-
----
-
-# 10. Network Security
-
-The project extends beyond endpoint monitoring by incorporating network-security analysis.
-
-The network security layer covers:
-
-* Wireshark packet analysis.
-* Suricata network detection.
-* Zeek network telemetry.
-* DNS analysis.
-* HTTP analysis.
-* Network threat hunting.
-
-Network security artifacts are maintained under:
-
-```text
-08-network-security/
-```
-
-The architecture is designed to correlate endpoint and network observations where the corresponding telemetry is available.
-
----
-
-# 11. Threat Intelligence
-
-Threat intelligence is incorporated as an enrichment layer for investigation and detection workflows.
-
-The project organizes indicators including:
-
-```text
-09-threat-intelligence/
-├── iocs/
-│   ├── hashes/
-│   ├── ips/
-│   ├── domains/
-│   └── urls/
-├── enrichment/
-└── intel-reports/
-```
-
-Threat intelligence can provide additional context for indicators discovered during investigations, including:
-
-* File hashes.
-* IP addresses.
-* Domains.
-* URLs.
-
-Intelligence enrichment is treated as supporting context and is correlated with internal telemetry and investigative findings.
-
----
-
-# 12. Security Automation
-
-The laboratory includes a security automation layer for repetitive analyst and detection-engineering tasks.
-
-Automation areas include:
-
-* Wazuh alert analysis.
-* IOC extraction.
-* Timeline generation.
-* Log analysis.
-* Detection validation.
-
-Automation artifacts are maintained under:
-
-```text
-10-scripts/
-```
-
-The objective is to reduce repetitive analyst workload while maintaining human review and investigative context.
-
----
-
-# 13. Metrics and Detection Improvement
-
-Detection quality is evaluated through a dedicated metrics layer.
-
-The metrics framework covers:
-
-* ATT&CK coverage.
-* Detection coverage.
-* Detection success.
-* False-positive analysis.
-* Detection gaps.
-* Before/after tuning.
-* Investigation metrics.
-
-Metrics are maintained under:
-
-```text
-11-metrics/
-```
-
-The continuous-improvement cycle is:
-
-```text
-Detect
-  ↓
-Validate
-  ↓
-Measure
-  ↓
-Identify Gap
-  ↓
-Tune
-  ↓
-Regression Test
-  ↓
-Retest
-  ↓
-Measure Again
-```
-
-This provides a measurable detection-engineering lifecycle rather than treating individual rules as isolated artifacts.
-
----
-
-# 14. Laboratory Security Boundary
-
-The environment is designed for controlled and authorized security testing.
-
-Security-testing activities are restricted to systems within the designated laboratory environment.
-
-The following principles apply:
-
-* Attack simulation is performed only for defensive validation.
-* Third-party or unauthorized systems are outside the testing scope.
-* Credentials and secrets are excluded from public documentation.
-* Screenshots are reviewed before publication.
-* Sensitive infrastructure information is minimized where unnecessary.
-* Security evidence is sanitized before being committed to the public repository.
-
----
-
-# 15. Documentation Structure
-
-The `01-lab` directory is organized into four primary areas:
-
-```text
-01-lab/
-├── README.md
-├── architecture/
-├── infrastructure/
-├── deployment/
-└── configuration/
-```
-
-### `architecture/`
-
-Documents the logical architecture, component relationships, telemetry flow, and data paths.
-
-```text
-architecture/
-├── enterprise-soc-architecture.png
-├── enterprise-soc-architecture.drawio
-└── data-flow.md
-```
-
-### `infrastructure/`
-
-Documents the systems and security components deployed within the laboratory.
-
-```text
-infrastructure/
-├── wazuh/
-├── windows/
-├── linux/
-└── network/
-```
-
-### `deployment/`
-
-Documents the deployment process used to build and establish the laboratory environment.
-
-### `configuration/`
-
-Documents security-relevant configuration applied to the monitoring infrastructure and endpoints.
-
----
-
-# 16. Repository Integration
-
-The laboratory acts as the foundation for the complete security portfolio.
-
-| Component                     | Purpose                                    |
-| ----------------------------- | ------------------------------------------ |
-| `01-lab/`                     | Laboratory architecture and infrastructure |
-| `02-detections/`              | Security detection content                 |
-| `03-threat-hunting/`          | Proactive threat hunting                   |
-| `04-Incident-Investigations/` | Security investigations                    |
-| `05-detection-engineering/`   | Detection development and validation       |
-| `06-incident-response/`       | Response playbooks and procedures          |
-| `07-forensics/`               | Digital forensic analysis                  |
-| `08-network-security/`        | Network monitoring and analysis            |
-| `09-threat-intelligence/`     | Threat intelligence and IOC enrichment     |
-| `10-scripts/`                 | Security automation                        |
-| `11-metrics/`                 | Detection and investigation measurement    |
-| `12-assets/`                  | Shared project assets                      |
-| `13-reports/`                 | Technical and executive reporting          |
-| `14-screenshots/`             | Visual evidence                            |
-| `docs/`                       | Cross-project technical documentation      |
-
----
-
-# 17. Reproducibility and Evidence
-
-The laboratory follows a reproducible documentation model.
-
-Where applicable, security activities are supported by:
-
-* Configuration evidence.
-* Endpoint telemetry.
-* Wazuh events.
-* Detection alerts.
-* Detection rules.
-* Investigation timelines.
-* Threat-hunting queries.
-* Forensic evidence.
-* Network-analysis evidence.
-* Validation results.
-* Regression-testing results.
-
-Evidence intended for public release is reviewed to remove:
-
-* Passwords.
-* API keys.
-* Authentication tokens.
-* Personal information.
-* Unnecessary internal addresses.
-* Sensitive infrastructure details.
-
----
-
-# 18. Design Principles
-
-The laboratory follows the following security engineering principles:
-
-### Observable
-
-Security-relevant behavior should generate usable telemetry.
-
-### Detectable
-
-Relevant behaviors should have corresponding detection logic where sufficient telemetry exists.
-
-### Investigable
-
-Alerts should provide sufficient context to support analyst investigation.
-
-### Huntable
-
-Telemetry should support proactive searches beyond individual alerts.
-
-### Reproducible
-
-Detection and investigation procedures should be repeatable.
-
-### Testable
-
-Detection logic should be validated against controlled activity.
-
-### Measurable
-
-Detection effectiveness and gaps should be measurable.
-
-### Continuously Improved
-
-Investigation findings should feed back into detection engineering and validation.
-
----
-
-# 19. Related Documentation
-
-The broader project documentation is maintained under:
-
-```text
-docs/
-```
-
-Key documents include:
-
-* `01-project-overview.md`
-* `02-architecture.md`
-* `03-telemetry.md`
-* `04-detection-engineering.md`
-* `05-threat-hunting.md`
-* `06-incident-response.md`
-* `07-digital-forensics.md`
-* `08-network-security.md`
-* `09-threat-intelligence.md`
-* `10-security-automation.md`
-* `11-lessons-learned.md`
-
-These documents provide cross-project technical context while `01-lab/` contains the underlying laboratory implementation and architecture.
-
----
-
-# 20. Laboratory Status
-
-The laboratory provides the technical foundation for the project's detection engineering, threat hunting, incident investigation, incident response, forensic analysis, network security, threat intelligence, automation, and measurement workflows.
-
-The architecture is modular and supports the addition of new telemetry sources, security technologies, detection content, investigation techniques, and automation capabilities without changing the fundamental SOC workflow.
-
-The laboratory therefore functions as an integrated security engineering environment rather than a collection of isolated security exercises.
+These boundaries preserve the technical credibility of the project and make its results easier for reviewers to assess.

@@ -1,155 +1,169 @@
-# SOC Detection Lab — Laboratory Environment and Architecture
+# SOC Detection Lab — Lab Environment
 
-## 1. Project Overview
+**Windows Security Monitoring and Threat Detection with Wazuh**
 
-The SOC Detection Lab is a practical blue-team project focused on Windows security monitoring and threat detection using Wazuh.
+## 1. Overview
 
-The laboratory provides the technical foundation for the completed detection implementations maintained in this repository. It documents the relationship between endpoint security telemetry, event processing, detection rules, and generated security alerts.
+The SOC Detection Lab is a hands-on blue-team project focused on monitoring Windows security activity, collecting endpoint telemetry, and documenting security detections using Wazuh.
 
-The project demonstrates core SOC monitoring concepts through documented detection use cases, their technical implementation, and the available supporting evidence.
+The lab environment is built with VMware and uses two virtual machines: Ubuntu Server and Windows 10. The Windows virtual machine serves as the monitored endpoint, while the Ubuntu Server virtual machine provides the environment for the Wazuh server-side components.
 
-## 2. Project Objectives and Deliverables
+The project focuses on practical detection engineering: understanding security telemetry, documenting detection logic, examining available alerts, and maintaining traceable evidence for Windows security monitoring use cases.
 
-The project brings together the following deliverables:
+This repository documents the lab architecture, environment, existing detection content, and supporting evidence. It does not assume that the environment is currently running or that historical detections have been revalidated.
 
-- A documented laboratory architecture for the existing detection environment.
-- Documentation of the relevant Windows security telemetry sources.
-- A structured collection of completed detection implementations.
-- Technical explanations of the suspicious behaviors targeted by each detection.
-- Documentation of the relationship between collected events and detection logic.
-- References to available screenshots, alert records, and configuration artifacts.
-- A consolidated detection inventory and relevant MITRE ATT&CK mappings.
+## 2. Project Objectives
 
-The documentation reflects the implementation and evidence available in the repository. Individual claims are supported by the corresponding detection files and artifacts where available.
+The lab is designed to support the following blue-team objectives:
 
-## 3. Laboratory Architecture
+- Understand how endpoint security events move through a SIEM monitoring pipeline.
+- Monitor relevant Windows security activity using Wazuh.
+- Develop and document Windows-focused detection use cases.
+- Understand the relationship between event sources, detection rules, and generated alerts.
+- Maintain documentation that connects each detection to its purpose, relevant telemetry, and available evidence.
+- Build practical experience with security monitoring and detection engineering in a virtualized environment.
 
-The laboratory uses a Wazuh-based monitoring workflow to process configured endpoint telemetry and identify security-relevant activity.
+## 3. Lab Architecture
+
+The lab uses VMware to run the Windows endpoint and Ubuntu Server in separate virtual machines.
 
 ```text
-┌─────────────────────────────────┐
-│       Windows Endpoint          │
-│                                 │
-│  Windows Security Telemetry     │
-│  Configured Endpoint Events     │
-└────────────────┬────────────────┘
-                 │
-                 ▼
-┌─────────────────────────────────┐
-│          Wazuh Agent            │
-│                                 │
-│  Configured Event Collection    │
-│  Telemetry Forwarding           │
-└────────────────┬────────────────┘
-                 │
-                 ▼
-┌─────────────────────────────────┐
-│         Wazuh Manager           │
-│                                 │
-│  Event Processing               │
-│  Detection Rule Evaluation      │
-│  Security Alert Generation      │
-└────────────────┬────────────────┘
-                 │
-                 ▼
-┌─────────────────────────────────┐
-│        Wazuh Dashboard          │
-│                                 │
-│  Alert Review                   │
-│  Security Event Analysis        │
-└─────────────────────────────────┘
+                 VMware Virtual Environment
+                 ┌─────────────────────────┐
+                 │                         │
+                 │   Windows 10 VM         │
+                 │                         │
+                 │   Windows Security      │
+                 │   Events and Telemetry  │
+                 │            │            │
+                 │       Wazuh Agent       │
+                 │            │            │
+                 │            ▼            │
+                 │   Ubuntu Server VM      │
+                 │                         │
+                 │       Wazuh Manager     │
+                 │            │            │
+                 │            ▼            │
+                 │   Alert Review Layer    │
+                 │   (Dashboard, if        │
+                 │    deployed and usable) │
+                 │                         │
+                 └─────────────────────────┘
 ```
 
-The diagram represents the documented logical monitoring workflow. Component-specific details should match the actual deployment and the records retained from the completed lab.
+*The diagram represents the intended logical workflow. It is not a verified network diagram or proof that every component is currently operational.*
 
-## 4. Monitoring Components
+### Environment components
 
-| Component | Function |
+| Component | Purpose |
 |---|---|
-| Windows endpoint | Produces the operating-system and security activity covered by the detection use cases. |
-| Wazuh Agent | Collects and forwards configured endpoint telemetry. |
-| Wazuh Manager | Processes received events and evaluates applicable detection rules. |
-| Wazuh Dashboard | Provides access to available alerts and security-event information. |
-| Detection rules | Identify the security-relevant behaviors covered by the completed implementations. |
+| VMware | Hosts and isolates the lab virtual machines |
+| Ubuntu Server VM | Provides the Linux environment for the Wazuh server-side deployment |
+| Windows 10 VM | Generates endpoint security telemetry |
+| Wazuh Agent | Collects and forwards configured Windows telemetry |
+| Wazuh Manager | Processes events and evaluates applicable detection rules |
+| Wazuh Dashboard | Provides an interface for reviewing alerts when the required services are available |
 
-The table describes the roles of the components in the documented architecture. Specific versions and deployment settings are recorded only where supported by existing configuration or evidence.
+The Indexer, Dashboard, and other Wazuh services must be documented according to their actual installation and availability. Their presence in the architecture does not, by itself, establish that they were successfully deployed.
 
-## 5. Telemetry Processing and Detection Workflow
+## 4. Telemetry and Detection Workflow
 
-The detection workflow is organized around the following sequence:
+The intended monitoring workflow consists of the following stages:
 
-1. **Event generation:** Security-relevant activity occurs on the monitored endpoint.
-2. **Telemetry collection:** Configured event sources record relevant activity.
-3. **Event forwarding:** The Wazuh Agent forwards configured telemetry to the monitoring infrastructure.
-4. **Event processing:** The Wazuh Manager processes the received events.
-5. **Rule evaluation:** Applicable detection rules evaluate events against their configured conditions.
-6. **Alert generation:** Matching activity produces alerts when the rule conditions are satisfied.
-7. **Analyst review:** Available alerts provide a starting point for examining the detected behavior.
+1. **Event generation:** Windows 10 generates security events as users and processes perform system activities.
+2. **Event collection:** The Wazuh Agent collects telemetry enabled by the endpoint's logging and agent configuration.
+3. **Event processing:** The Wazuh Manager receives and processes the available events.
+4. **Rule evaluation:** Applicable detection rules evaluate event fields and conditions.
+5. **Alert review:** Resulting alerts can be reviewed through the available Wazuh interface.
+6. **Documentation:** Detection logic, relevant event details, and existing evidence are recorded in the repository.
 
-The actual event source, rule logic, and alert fields are documented at the individual detection level.
+Actual detection coverage depends on Windows audit settings, event collection configuration, rule implementation, and the telemetry available for analysis.
 
-## 6. Implemented Detection Coverage
+## 5. Detection Coverage
 
-The repository contains completed detection work covering selected Windows security behaviors.
+The project is focused on Windows security detections documented in the repository's existing detection directory.
 
-The known areas of coverage include:
+The intended coverage areas include the following categories where supported by the existing rules and evidence:
 
-- Failed authentication attempts.
-- Suspicious PowerShell activity.
-- Windows account creation.
-- Scheduled-task creation.
-- Encoded PowerShell execution.
-- Microsoft Defender malware detections.
-- Suspicious parent-child process relationships.
-- CertUtil-based decoding activity.
+- Authentication failures and suspicious login activity
+- Suspicious PowerShell activity and security-policy discovery
+- Windows account creation
+- Scheduled-task creation
+- Encoded PowerShell execution
+- Windows Defender malware-detection events
+- Suspicious parent-child process relationships
+- CertUtil activity associated with file decoding
 
-These categories should be reconciled with the current detection inventory. Each detection should link to its actual rule, explanation, and available supporting evidence.
+These categories describe the project's known detection scope, not a claim that every scenario is currently enabled, has been successfully tested, or is producing alerts in a live environment. Each detection's implementation and validation status should be established from its own documentation and evidence.
 
-## 7. Detection Documentation and Traceability
+## 6. Documentation and Evidence
 
-Each detection should provide a consistent record of its purpose and implementation.
+The lab documentation is intended to provide a traceable view of the environment and its detection content.
 
-| Documentation element | Expected content |
-|---|---|
-| Detection objective | Security behavior the detection is intended to identify. |
-| Data source | Windows event source or other telemetry used by the rule. |
-| Detection logic | Existing Wazuh rule or relevant implementation reference. |
-| Alert interpretation | Meaning of the relevant alert fields and conditions. |
-| ATT&CK mapping | Applicable technique and a justification for the mapping. |
-| False-positive considerations | Plausible legitimate activity that may trigger the rule. |
-| Evidence references | Links to existing screenshots, alert records, or configuration artifacts. |
-| Validation record | Previously documented test procedure and actual result, where available. |
+Supporting records may include:
 
-This structure supports traceability between the implementation, its intended behavior, and the evidence retained in the repository.
+- Architecture and environment documentation
+- Detection rule files and associated explanations
+- Relevant Windows event records
+- Historical alert screenshots or exports
+- Existing validation notes
+- Known limitations and configuration dependencies
 
-## 8. Evidence and Validation Records
+Evidence should be associated with the specific detection or configuration it supports. Historical evidence must not be presented as proof of current operational status.
 
-Evidence is an important part of the project because it allows reviewers to distinguish documented functionality from unverified claims.
+Missing evidence should be identified explicitly rather than replaced with fabricated screenshots, event records, metrics, or test outcomes.
 
-The evidence record should reference artifacts such as:
+## 7. Scope and Limitations
 
-- Existing Wazuh alert screenshots.
-- Relevant detection-rule configuration.
-- Available Windows event records.
-- Recorded examples of matching alerts.
-- Existing validation notes or test records.
-- Supporting configuration details.
+This project is centered on Windows endpoint monitoring and Wazuh-based detection in a VMware lab.
 
-Each artifact should identify the detection it supports and explain what it demonstrates.
+The documented scope does not automatically include:
 
-A screenshot of a rule proves that the rule configuration is documented; it does not, by itself, prove that the rule generated an alert. Similarly, an alert screenshot demonstrates a recorded alert, while a successful validation claim requires evidence connecting the relevant activity to the expected detection outcome.
+- Multiple SIEM platforms or cross-SIEM correlation
+- Automated incident response or remediation
+- Enterprise-scale high availability
+- Threat-intelligence integrations
+- Production-grade service monitoring
+- Quantified detection accuracy or performance benchmarks
 
-Historical evidence from the completed lab can be retained even if the environment is no longer available for additional testing.
+These capabilities should be added to the project description only if they are actually implemented and supported by evidence.
 
-## 9. Technical Accuracy and Limitations
+The current availability of the lab components is not asserted by this documentation. Historical configuration and evidence should be interpreted according to the time they were recorded.
 
-The documentation distinguishes between implemented detection logic, recorded observations, and capabilities that have not been independently verified.
+## 8. Project Structure
 
-- Existing detection rules are documented from their actual implementation.
-- Historical alerts and screenshots are identified as retained evidence.
-- Configuration details are included when supported by available records.
-- Validation results are reported only when documented evidence supports them.
-- Current operational status is not inferred from historical screenshots.
-- Detection coverage is limited to the behaviors represented by the existing rules.
+The repository's existing structure is the source of truth for its files and directories.
 
-These boundaries preserve the technical credibility of the project and make its results easier for reviewers to assess.
+The following documentation files describe the lab environment:
+
+- `README.md` — Lab overview, architecture, objectives, and scope
+- `architecture.md` — Logical component architecture
+- `environment.md` — Virtual machines and component responsibilities
+- `telemetry-flow.md` — Event collection and detection workflow
+
+Detection documentation and evidence remain in their existing repository locations. Update any relative links in this document if the actual directory names differ.
+
+## 9. Security and Evidence Handling
+
+- Do not commit credentials, access tokens, private keys, or other secrets.
+- Redact sensitive information from screenshots and event exports where appropriate.
+- Preserve the distinction between configuration, observed activity, and validated detection outcomes.
+- Document dependencies and limitations that affect detection behavior.
+- Keep historical evidence clearly identified as historical.
+
+## 10. Project Status
+
+The repository documents a Windows-focused security monitoring and detection project built around a VMware lab with Ubuntu Server and Windows 10 virtual machines.
+
+The project's existing detection content and supporting records should be evaluated individually. This README does not claim that the lab is currently operational, that all Wazuh services are available, or that every detection has been revalidated.
+
+The project is intended to demonstrate practical understanding of Windows telemetry, SIEM workflows, detection logic, and evidence-based blue-team documentation.
+
+---
+
+**Project:** SOC Detection Lab  
+**Focus:** Windows Security Monitoring and Threat Detection  
+**Virtualization:** VMware  
+**Endpoint:** Windows 10 VM  
+**Server environment:** Ubuntu Server VM  
+**SIEM platform:** Wazuh

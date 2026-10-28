@@ -1,14 +1,14 @@
-# Negative Tests
+# Negative tests
 
-This content documents benign or expected non-malicious cases.
+Negative tests are designed to evaluate whether a detection avoids over-alerting on common, benign behavior.
 
-## Negative scenarios
+## Example benign scenarios
 
-- legitimate sign-in or internal IT support script loads an HTA file
-- administrative tool launches a local `.hta` file for approved workflow
-- `mshta.exe` calls a user-approved internal help application
-- false-positive process lineage due to normal parent-child relationships
+- a legitimate internal administrative `.hta` file,
+- `mshta.exe` invoked by an approved enterprise tool,
+- user-generated help content in a controlled environment,
+- repeated local process execution that lacks suspicious context.
 
-## Expected result
+## Use
 
-The detection logic should avoid flagging these without surrounding suspicious context.
+These cases help protect against false positives and establish a realistic level of confidence before lab execution.

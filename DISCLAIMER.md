@@ -1,17 +1,41 @@
-# Disclaimer
+# Contributing
 
-This repository is for authorized defensive security research and controlled laboratory work only.
+Contributions are welcome when they improve the quality, correctness, and professionalism of the HTA detection engineering lab.
 
-The content in this project is intended for use in isolated Windows lab environments, controlled test systems, or other explicitly authorized environments. It must not be used against systems, networks, or users without written permission from the system owner and relevant authorities.
+## Contribution principles
 
-The project includes guidance on Windows telemetry collection, Sysmon configuration, process creation analysis, command-line review, and detection engineering. These materials are provided for legitimate defensive purposes, including detection validation and blue-team skill development.
+- Keep content focused on Windows endpoint telemetry, HTA abuse, and SIEM-independent detection engineering.
+- Prefer evidence-based documentation over speculation.
+- Clearly document telemetry dependencies and field assumptions.
+- Label synthetic fixtures as synthetic and avoid presenting them as real telemetry.
+- Maintain consistent Markdown structure and naming conventions.
 
-By using this repository, you agree that:
+## What to include
 
-- You will only test within authorized lab or operational boundaries.
-- You will not execute or analyze untrusted payloads on production systems.
-- You will not deploy malicious software or malicious scripts outside a controlled environment.
-- You will not misuse telemetry, collection guidance, or threat-hunting content for unauthorized activity.
-- You are responsible for the legality and compliance of any lab testing you perform.
+- detection rationale and telemetry requirements,
+- realistic testing constraints or lab prerequisites,
+- example Sigma or event-query logic,
+- limitations, false positives, and blind spots,
+- evidence references or synthetic fixture links.
 
-This project does not guarantee detection coverage, event availability, or operational effectiveness in any environment. The materials are documentation and engineering assets, not a warranty of security.
+## Prohibited content
+
+Do not commit:
+
+- credentials or secrets,
+- private telemetry or operational data,
+- personal information,
+- unauthorized screenshots,
+- malicious or weaponized content,
+- or anything intended for unauthorized testing.
+
+## Pull requests
+
+Open a pull request that includes:
+
+- the scope of the change,
+- the affected detection or documentation area,
+- validation performed,
+- and any remaining limitations.
+
+This repository exists for defensive engineering and authorized lab use only.

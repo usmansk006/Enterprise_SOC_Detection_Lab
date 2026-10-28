@@ -1,16 +1,17 @@
-# MITRE ATT&CK Mapping
+# MITRE ATT&CK mapping
 
-This mapping documents how the HTA detection set aligns with ATT&CK concepts.
+## Relevant techniques
 
-| Technique | Description | Use in this lab |
-| --- | --- | --- |
-| T1218.005 | Mshta | Primary technique for HTA execution detection |
-| T1059 | Command and Scripting Interpreter | Inline script and command-line indicators |
-| T1105 | Ingress Tool Transfer | Relevant when HTA fetches remote content |
-| T1566 | Phishing | could be involved in initial lure delivery |
-| T1027 | Obfuscated Files or Information | command-line obfuscation |
-| T1055 | Process Injection | related child or parent process anomalies |
+- T1218.005: `Mshta`
+- T1059: Command and Scripting Interpreter
+- T1071: Application Layer Protocol
+- T1105: Ingress Tool Transfer
+- T1053: Scheduled Task/Job (when used for persistence or automation)
 
-## Caveat
+## Mapping notes
 
-ATT&CK mapping is contextual and should not be used as proof of maliciousness without supporting telemetry.
+`mshta.exe` is commonly associated with `T1218.005`, especially when used as a script host or execution vector. Additional context, such as network connections and script abuse, may also align with other ATT&CK techniques depending on the observed behavior.
+
+## Operational caveat
+
+ATT&CK mapping should be used as an analyst aid, not as proof of malicious intent on its own.

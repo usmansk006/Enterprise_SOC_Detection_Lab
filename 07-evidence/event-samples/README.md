@@ -1,17 +1,18 @@
-# Evidence Standards
+# Evidence standards
 
-This directory provides the evidence structure and naming standards for the project.
+This folder documents how to handle and preserve evidence related to HTA execution analysis and validation work. It is intentionally conservative and does not claim the existence of real evidence that has not been captured.
 
-## Standard expectations
+## Evidence expectations
 
-- use consistent naming conventions
-- document whether the artifact is synthetic or captured in an authorized lab
-- link each artifact to a detection or validation test
+- store only authorized and non-sensitive artifacts,
+- label synthetic fixtures clearly,
+- keep event logs in a reproducible form,
+- distinguish observation from analyst inference,
+- and preserve the original context of any validation attempt.
 
-## Example naming pattern
+## Subfolders
 
-`DET-001-mshta-process-01.png`
-
-## Important rule
-
-Never label synthetic fixtures as actual captured evidence.
+- `event-samples/`: samples and example event data
+- `screenshots/`: naming and labeling standards
+- `timelines/`: timeline templates and event ordering guidance
+- `validation-reports/`: structured reports for local validation

@@ -1,14 +1,14 @@
-# Regression Tests
+# Regression tests
 
-This folder documents stability checks and rule evolution guardrails.
+Regression tests ensure the logic remains stable across future edits.
 
-## Example regression goals
+## Example checks
 
-- maintain detection logic readability after updates
-- ensure file names and rule IDs remain consistent
-- confirm parser and correlator handle malformed input gracefully
-- review detection quality after new telemetry assumptions
+- command-line parsing remains intact,
+- rule validation still passes for supported YAML structure,
+- process correlation still resolves valid GUID and timestamp relationships,
+- malformed JSON or missing required fields are rejected safely.
 
-## Notes
+## Scope
 
-Regression tests should be executed only after rule or script changes that affect parser assumptions or detection logic.
+This repository contains automated Python test coverage for parsing, validation, and correlation logic. Full live telemetry regression remains pending authorized execution.

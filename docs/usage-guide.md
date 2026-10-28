@@ -1,29 +1,18 @@
-# Usage Guide
+# Setup guide
 
-This guide explains how to use the repository after setup.
+## Prerequisites
 
-## Repository usage
+- a disposable Windows VM or lab host,
+- administrator access for Sysmon installation and audit review,
+- a local Git environment,
+- and Python 3.9+ for toolkit use.
 
-- Review `02-detections/` for the HTA-related detection catalog.
-- Review `03-detection-rules/` for Sigma-style detection logic and rule assumptions.
-- Use `06-local-analysis-toolkit/` for parsing, validation, and correlation.
-- Use `04-validation/` to review test coverage and expected outcomes.
-- Use `05-threat-hunting/` for investigation workflows.
+## Workflow
 
-## Typical workflow
+1. Prepare the lab host.
+2. Install Sysmon with the provided XML template.
+3. Validate event availability.
+4. Run local scripts against synthetic or lab event data.
+5. Document results and note limitations.
 
-```text
-1. Prepare Windows endpoint telemetry
-2. Review event fixtures or local logs
-3. Parse events with the toolkit
-4. Validate Sigma YAML structure
-5. Correlate HTA-related activity
-6. Review false positives and blind spots
-7. Document testing outcome honestly
-```
-
-## Safe usage notes
-
-- Never run unknown HTA content outside a lab environment.
-- Treat all suspicious HTA activity as potentially malicious until validated.
-- Keep all evidence and fixtures synthetic unless specifically collected in an authorized lab environment.
+This guide is deliberately conservative and assumes a lab-only environment.

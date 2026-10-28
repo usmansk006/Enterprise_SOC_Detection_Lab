@@ -1,13 +1,26 @@
-# Legacy Detections
+# Final project report
 
-This directory is intentionally retained as a home for historical or Wazuh-oriented detection material that remains useful but is not part of the active HTA detection engineering focus.
+## Executive summary
 
-## Purpose
+The repository has been transformed from a Wazuh-centric SOC lab into a local-first, SIEM-independent HTA detection engineering lab. The project documents how to build, validate, and investigate suspicious `mshta.exe` execution in a controlled environment.
 
-- preserve useful existing work
-- avoid silent deletion of historical material
-- separate legacy documentation from the current HTA-specific architecture
+## Scope
 
-## Validation note
+- environment setup and Sysmon guidance,
+- detection engineering catalog,
+- Sigma and query examples,
+- local Python analysis tooling,
+- validation matrix,
+- threat-hunting and investigation guidance,
+- and detection-quality reporting.
 
-This material remains useful context, but it should be treated as legacy unless independently reviewed for the current SIEM-independent architecture.
+## Status
+
+The repository contains a coherent architecture and meaningful content across all planned directories. Live Windows validation remains unexecuted in this environment and should be treated as an explicit next step in an authorized lab.
+
+## Remaining work
+
+- run authorized Windows telemetry validation,
+- tune detection thresholds to real event data,
+- expand regression coverage with additional fixtures,
+- and refine documentation based on observed telemetry quality.

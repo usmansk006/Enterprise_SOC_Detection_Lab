@@ -1,13 +1,21 @@
-# Limitations
+# Limitations and evasion considerations
 
-This project is intentionally honest about the limits of detection engineering.
+Detection engineering for `mshta.exe` has several important constraints:
 
-- process creation evidence can lack full execution context
-- file execution may be blocked or occur off-host
-- network activity may be hidden by proxy or NAT
-- some malicious HTA chains use staging and indirect execution
-- no production environment was used to validate live detections here
+- process execution alone does not reveal intent,
+- attackers may use environment variables, encoding, or alternate script wrappers,
+- legitimate software may trigger similar patterns,
+- and event availability may differ between Windows versions and policies.
 
-## Evasion considerations
+## Evasion risk
 
-Attackers may encode or stage HTA content to avoid simplistic detection. Multi-stage techniques and execution wrappers may reduce the value of single-event rules.
+Attackers may bypass simplistic detection rules by:
+
+- using encoded remote references,
+- nesting script strings,
+- staging files in user-writable directories,
+- or executing through a disguised parent process.
+
+## Recommendation
+
+Use these rules as contextual, analyst-supported detections, not autonomous blocking logic. Pair them with investigation and telemetry validation.

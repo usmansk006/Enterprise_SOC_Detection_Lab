@@ -1,15 +1,23 @@
-# Detection Gaps
+# Detection gaps
 
-This document captures the limitations in the active detection library.
+## Telemetry gaps
 
-## Notable gaps
+- missing parent-process lineage,
+- absent command-line logging,
+- event loss or log retention gaps,
+- incomplete file creation or network telemetry,
+- inconsistent Sysmon coverage across endpoint versions.
 
-- event loss or log retention gaps
-- missing command-line data on some systems
-- incomplete Sysmon configuration
-- absent file creation telemetry
-- no full Windows live validation in this environment
+## Logic gaps
 
-## Analytical impact
+- process creation alone does not show purpose,
+- remote URLs may be legitimate internal services,
+- some malicious behavior may be encoded or split across multiple events,
+- and native logs may not capture all script execution details.
 
-Without strong context, HTA detections may under-detect or produce noise. Correlation quality is dependent on event completeness and timestamp quality.
+## Improvement roadmap
+
+- add more synthetic fixtures and lab telemetry,
+- tune rules against real-world benign patterns,
+- document confidence and overlap across detection families,
+- and align detections with actual field availability.

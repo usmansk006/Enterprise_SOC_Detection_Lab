@@ -1,24 +1,52 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Sysmon schemaversion="4.90">
-  <EventFiltering>
-    <ProcessCreate onmatch="include">
-      <Image condition="is">C:\Windows\System32\mshta.exe</Image>
-      <Image condition="is">C:\Windows\System32\cmd.exe</Image>
-      <Image condition="is">C:\Windows\System32\powershell.exe</Image>
-      <Image condition="is">C:\Windows\System32\rundll32.exe</Image>
-      <Image condition="is">C:\Windows\System32\wscript.exe</Image>
-      <Image condition="is">C:\Windows\System32\cscript.exe</Image>
-      <Image condition="is">C:\Windows\System32\wmic.exe</Image>
-    </ProcessCreate>
-    <NetworkConnect onmatch="include">
-      <Protocol condition="is">tcp</Protocol>
-      <Protocol condition="is">udp</Protocol>
-    </NetworkConnect>
-    <FileCreate onmatch="include">
-      <TargetFilename condition="contains">.hta</TargetFilename>
-      <TargetFilename condition="contains">.js</TargetFilename>
-      <TargetFilename condition="contains">.vbs</TargetFilename>
-      <TargetFilename condition="contains">.ps1</TargetFilename>
-    </FileCreate>
-  </EventFiltering>
-</Sysmon>
+# Telemetry requirements and event coverage
+
+## Core telemetry sources
+
+For HTA detection engineering, the most important telemetry is process creation and lineage. The following are the primary requirements:
+
+- process name and full path,
+- process ID and parent process ID,
+- command line,
+- user context,
+- timestamps,
+- file path for script or document being opened,
+- network connection telemetry where relevant,
+- and file creation or script-writing events for related artifacts.
+
+## Windows Security log relevance
+
+The Security log is useful for:
+
+- process creation where auditing is enabled,
+- logons and user context,
+- object access and file creation when configured,
+- and support for incident investigation and correlation.
+
+## Sysmon relevance
+
+Sysmon is the most useful telemetry source for HTA-related detections. Typical events of interest:
+
+- Event ID 1: process creation,
+- Event ID 3: network connection,
+- Event ID 11: file creation time,
+- Event ID 15: clipboard text changes or related activity when configured,
+- and event fields such as `ProcessGuid`, `CommandLine`, `ParentImage`, `ParentCommandLine`, and `Image`.
+
+## Field expectations
+
+A practical detection workflow requires reliable access to:
+
+- `Image`
+- `ParentImage`
+- `CommandLine`
+- `ParentCommandLine`
+- `ProcessGuid`
+- `User`
+- `Protocol`
+- `DestinationIp`
+- `DestinationPort`
+- `TargetFilename`
+
+## Limitations
+
+Not all hosts will expose every field. Event forwarding, log retention, local policies, or monitoring gaps may hide the required data. Detection content should document these dependencies and avoid overclaiming reliability.

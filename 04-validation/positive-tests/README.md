@@ -1,15 +1,15 @@
-# Positive Tests
+# Positive tests
 
-This content documents suspicious activity and expected detection patterns.
+This area is reserved for safe, authorized synthetic tests and validation examples. Positive tests are intended to represent suspicious or high-signal behavior, not confirmed malicious activity on real endpoints.
 
-## Included scenarios
+## Sample scenarios
 
-- `mshta.exe` launched from a temp directory
-- remote HTML content resolved via `http://` or `https://`
-- `javascript:` or `vbscript:` embedded in command line
-- HTA file created in user-writable directory and later executed
-- network connection from the HTA process to an external host
+- `mshta.exe` launched with a remote HTTP URL,
+- `mshta.exe` executed from a temporary or user-writable path,
+- process lineage from a shell to `mshta.exe`,
+- file creation for `.hta`, `.js`, or `.vbs` artifacts,
+- outbound network connection after HTA execution.
 
-## Scope
+## Validation notes
 
-These are controlled test scenarios intended to validate detection logic and correlation behavior. They are not production telemetry.
+These scenarios are synthetic by default and must not be represented as live Windows telemetry. They are useful for rule logic and Python validation exercises.

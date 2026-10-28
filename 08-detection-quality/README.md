@@ -1,14 +1,12 @@
-# Detection Quality
+# Validation reports
 
-This section stores quality assessment artifacts for HTA detection content.
+This folder contains structured report templates for local or lab-based validation. Each report should state:
 
-## Included files
+- scenario tested,
+- source of evidence,
+- expected result,
+- actual result,
+- pass/fail status,
+- and known limitations.
 
-- `coverage-matrix.csv`
-- `false-positive-analysis.md`
-- `detection-gaps.md`
-- `limitations.md`
-
-## Purpose
-
-Document what the detection set covers, where telemetry is missing, and how the rules may misclassify benign `mshta.exe` activity.
+This repository is intentionally careful not to describe unrun live tests as passed.

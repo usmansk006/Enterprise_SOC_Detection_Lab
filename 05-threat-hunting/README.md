@@ -1,17 +1,13 @@
-# Threat Hunting
+# Validation results
 
-This directory contains local, analyst-focused guidance for hunting suspicious HTA execution behavior.
+This directory is reserved for traceable results that document attempts to validate the project. This repository intentionally does not claim live test completion without evidence.
 
-## Included content
+## Current status
 
-- hunting queries
-- process tree analysis notes
-- investigation playbook
+- synthetic validation fixtures included,
+- Python unit tests implemented,
+- live Windows validation not executed in an authorized environment.
 
-## Investigation priorities
+## Output expectations
 
-- identify the initiating process
-- inspect command line and script arguments
-- review parent and child relationships
-- analyze file creation and network behavior
-- correlate timestamps and process GUIDs where available
+Any result stored here should be tied to a specific fixture or script run and should clearly differentiate synthetic from live lab evidence.

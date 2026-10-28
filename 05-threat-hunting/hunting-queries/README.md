@@ -1,15 +1,19 @@
-# Hunting Queries
+# Threat hunting guide
 
-This folder stores analyst-oriented queries and review patterns.
+This section focuses on practical hunting for suspicious HTA execution behavior using local event data and process correlation.
 
-## Example query themes
+## Core hunting questions
 
-- `mshta.exe` process creation
-- command-line patterns with `http`, `javascript`, or `vbscript`
-- child processes launched by `mshta.exe`
-- network connections originating from HTA execution
-- suspicious file creation near temp or user-writable paths
+- Was `mshta.exe` launched by a suspicious parent?
+- Was a remote HTA file or script reference used?
+- Did the process spawn additional script hosts or system utilities?
+- Was there related network activity or temporary file staging?
+- Did the user context or path pattern align with malicious behavior?
 
-## Investigation guidance
+## Event sources
 
-Always review host, user context, timestamp ordering, and process lineage before concluding malicious activity.
+- Sysmon process creation,
+- Network connection telemetry,
+- file creation events,
+- Windows Security process events,
+- and any PowerShell or script logging made available by policy.

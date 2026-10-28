@@ -1,0 +1,26 @@
+title: DET-004-suspicious-parent-process
+id: 1d3e67c8-0d2d-4f0e-a8cf-bfc4bbbe8d98
+status: experimental
+description: Detects mshta.exe launched from suspicious parent processes such as PowerShell or command shells with encoded or indirect execution.
+author: HTA Sentinel
+date: 2026-10-28
+logsource:
+  product: windows
+  category: process_creation
+detection:
+  selection_base:
+    Image|endswith: '\mshta.exe'
+  selection_parent:
+    ParentImage|endswith:
+      - '\powershell.exe'
+      - '\cmd.exe'
+      - '\rundll32.exe'
+      - '\wmic.exe'
+      - '\wscript.exe'
+  condition: selection_base and selection_parent
+falsepositives:
+  - Automation or support tasks that legitimately chain scripts and HTA objects
+level: medium
+tags:
+  - attack.execution
+  - attack.t1218.005

@@ -1,19 +1,9 @@
-# Validation Reports
+# Timeline templates
 
-This folder stores validation report templates and summaries.
+A simple evidence timeline should include:
 
-## Template fields
+| Timestamp | Source | Event | Artifact | Analyst notes |
+| --- | --- | --- | --- | --- |
+| 2026-10-28T14:02:00Z | Sysmon | ProcessCreate | mshta.exe | Parent process observed |
 
-- detection ID
-- purpose
-- telemetry required
-- test procedure
-- expected result
-- actual result
-- evidence reference
-- status
-- limitations
-
-## Use
-
-Use this folder for reproducible validation output and any lab-run reports that are explicitly labeled as such.
+Use this format to track a process, command line, child process, and network correlation sequence.

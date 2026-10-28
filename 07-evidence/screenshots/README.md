@@ -1,10 +1,13 @@
-# Screenshots
+# Event samples
 
-This section is reserved for approved screenshots and visual evidence artifacts, if collected in a lab environment.
+Store extracted snippets or synthetic event records here. Each file should include a clear provenance statement indicating whether it is synthetic, lab-generated, or real evidence.
 
-## Naming guidance
+## Example labels
 
-- `DET-001-01-process-creation.png`
-- `DET-010-02-correlated-events.png`
+- `synthetic-mshta-process.json`
+- `lab-validation-event-snippet.jsonl`
+- `evidence-sample-001.txt`
 
-Only use screenshots collected in authorized environments.
+## Review note
+
+Do not upload private telemetry or sensitive environment details.

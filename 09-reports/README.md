@@ -1,13 +1,13 @@
-# Reporting
+# Reporting and project summary
 
-This directory contains project-level reporting artifacts.
+This section provides the project-level reporting material for the HTA detection engineering lab.
 
-## Included files
+## Included documents
 
 - `detection-catalog.md`
 - `mitre-attack-mapping.md`
 - `final-project-report.md`
 
-## Objective
+## Reporting principle
 
-The reports explain repository status, detection coverage, and telemetry assumptions without overstating validation coverage.
+The content is prepared to be professional, evidence-aware, and explicit about the difference between a documented hypothesis and a validated detection.

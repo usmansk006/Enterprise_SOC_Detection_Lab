@@ -1,13 +1,11 @@
-# Event Fixtures
+# Event fixtures
 
-This directory stores synthetic event records created for safe testing.
+This folder contains synthetic or hand-crafted sample data for local validation.
 
-## Purpose
+## Provided fixture
 
-- validate event parsing and normalization
-- test rule structure and correlation logic
-- support unit tests without relying on private telemetry
+- `sample-mshta-process.json`: a synthetic process event representing `mshta.exe` execution with related metadata.
 
-## Notes
+## Safety note
 
-All fixtures are synthetic and must be clearly labeled as such.
+These files are examples only and are not production telemetry. They are designed for rule and parser validation in a safe local environment.

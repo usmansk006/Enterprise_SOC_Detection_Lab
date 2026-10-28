@@ -1,20 +1,16 @@
-# Detection Catalog
+# Detection catalog
 
-This catalog summarizes the active detection content and their intended hypotheses.
+| Detection ID | Name | Focus | Validation Status |
+| --- | --- | --- | --- |
+| DET-001 | `mshta.exe` execution baseline | initial process execution | Documented |
+| DET-002 | Remote HTA reference | remote script loading | Documented |
+| DET-003 | Inline script patterns | scriptlet or inline invocation | Documented |
+| DET-004 | Suspicious parent process | process lineage | Documented |
+| DET-005 | Suspicious child process | child behavior | Documented |
+| DET-006 | User-writable path | local staging | Documented |
+| DET-007 | Network activity | outbound activity | Documented |
+| DET-008 | Related file creation | artifact staging | Documented |
+| DET-009 | Suspicious command line | obfuscation and remote references | Documented |
+| DET-010 | Correlated HTA behavior | multi-event correlation | Documented |
 
-## Active detections
-
-- DET-001: `mshta.exe` execution baseline
-- DET-002: remote HTA references
-- DET-003: inline script patterns
-- DET-004: suspicious parent process relationships
-- DET-005: suspicious child process relationships
-- DET-006: user-writable/temp execution paths
-- DET-007: relevant network activity
-- DET-008: related file creation activity
-- DET-009: suspicious command-line patterns and obfuscation
-- DET-010: correlated HTA behavior
-
-## Notes
-
-The detections are designed as engineering hypotheses and should be treated as starting points for tuning and validation.
+All detections remain subject to operational validation in an authorized lab environment.

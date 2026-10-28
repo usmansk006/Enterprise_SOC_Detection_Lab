@@ -1,13 +1,16 @@
-# Timelines
+# Screenshot standards
 
-Timeline reconstruction is a central investigation technique.
+Use a consistent naming scheme such as:
 
-## Template
+`YYYYMMDD_HOST_EVENTTYPE_v1.png`
 
-| Timestamp | Host | Process | Parent | Command Line | Notes |
-| --- | --- | --- | --- | --- | --- |
-| 2026-01-01T00:00:00Z | HOST01 | mshta.exe | explorer.exe | `...` | Initial HTA launch |
+Examples:
 
-## Notes
+- `20261028_LAB-WS-01_mshta-process_v1.png`
+- `20261028_LAB-WS-01_process-tree_v1.png`
 
-Reconstruction should distinguish output from confirmed telemetry versus analyst interpretation.
+## Rules
+
+- do not include credentials or user data,
+- avoid exposing private infrastructure,
+- and clearly label synthetic or lab-only screenshots.

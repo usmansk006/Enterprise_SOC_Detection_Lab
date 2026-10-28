@@ -1,22 +1,35 @@
-# Detection Engineering
+# Installation and verification
 
-This directory is the catalog for the HTA detection set. The content is intentionally local-first and does not require a SIEM to be operational.
+## Installation
 
-Each detection includes a rule, telemetry requirements, rationale, false positive notes, and validation status.
+1. Download Sysmon from the Microsoft Sysinternals site.
+2. Install using a validated configuration file.
+3. Confirm the service is running as `Sysmon64` or equivalent.
+4. Review the default event log channel for process creation and network connection data.
 
-## Detection set
+## Verification steps
 
-- DET-001: mshta.exe execution baseline
-- DET-002: remote HTA references
-- DET-003: inline script patterns
-- DET-004: suspicious parent process relationships
-- DET-005: suspicious child process relationships
-- DET-006: user-writable or temp path execution
-- DET-007: relevant network activity
-- DET-008: related file creation activity
-- DET-009: suspicious command-line patterns and obfuscation
-- DET-010: correlated multi-event HTA behavior
+Use a controlled test host and confirm:
 
-## Validation posture
+- `Event ID 1` appears for process creation,
+- `CommandLine` is captured without truncation where configured,
+- `ParentImage` and `ParentCommandLine` are available,
+- and network or file creation events are visible for known test activity.
 
-These are detection hypotheses and must be interpreted with telemetry quality in mind. Normal software can legitimately use `mshta.exe`; therefore context matters.
+## Commands and checks
+
+Example validation steps:
+
+```powershell
+Get-Service Sysmon
+Get-WinEvent -LogName "Microsoft-Windows-Sysmon/Operational" -MaxEvents 20
+Get-WinEvent -LogName "Security" -MaxEvents 20 | Where-Object {$_.Id -eq 4688}
+```
+
+## Safety and scope
+
+These steps are for authorized lab testing only. Do not run unknown HTA files or untrusted script content. Validate results only in an isolated environment and document any missing telemetry.
+
+## Notes
+
+Sysmon schema may vary by version. Use the version that matches your environment and validate the XML against the supported schema before production use. The included XML is a practical starting point for an isolated lab, not a guarantee of every environment-specific field.

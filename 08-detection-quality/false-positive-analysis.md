@@ -1,20 +1,22 @@
-# False Positive Analysis
+# False-positive analysis
 
-This file documents likely false positives for HTA detections.
+## Common false positives
 
-## Common false-positive scenarios
+- internal help applications using HTA,
+- approved admin or support tooling,
+- custom enterprise wrappers built around `mshta.exe`,
+- user-generated local files in `%Temp%` or Downloads,
+- or script automation that legitimately launches HTA for local tasks.
 
-- legitimate internal help or admin tools call `mshta.exe`
-- approved IT support scripts open local `.hta` files
-- browser or software helper mechanisms invoke HTA in signed environments
-- security tooling or malware analysis harnesses simulate HTA execution in lab environments
+## Mitigation strategy
 
-## Mitigations
+- prioritize suspicious parent-child logic,
+- require more than one strong signal,
+- correlate with network or file creation events,
+- and document the trade-off between detection sensitivity and noise.
 
-- require contextual indicators such as suspicious command lines or user-writable file paths
-- combine process lineage with network or file creation data
-- use higher confidence only when multiple events align
+## Confidence guidance
 
-## Risk
-
-Single `mshta.exe` execution alone is not enough to classify meaning malicious activity.
+- single `mshta.exe` execution: low to medium confidence,
+- remote URL or script pattern: medium to high confidence,
+- correlated process + network + file creation: highest confidence, but still hypothesis-driven.

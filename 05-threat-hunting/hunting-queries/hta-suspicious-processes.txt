@@ -1,0 +1,23 @@
+# HTA hunting queries
+
+## Suspicious `mshta.exe` process review
+
+```powershell
+Get-WinEvent -LogName "Microsoft-Windows-Sysmon/Operational" | Where-Object { $_.Message -match "mshta.exe" }
+```
+
+## Parent-child investigation
+
+```powershell
+Get-WinEvent -LogName "Microsoft-Windows-Sysmon/Operational" | Where-Object { $_.Message -match "ParentImage.*powershell.exe" -and $_.Message -match "mshta.exe" }
+```
+
+## Temporary file and remote reference check
+
+```powershell
+Get-WinEvent -LogName "Microsoft-Windows-Sysmon/Operational" | Where-Object { $_.Message -match "http://|https://|Temp|AppData" }
+```
+
+## Notes
+
+These queries should be adapted to the actual event schema and environment configuration.

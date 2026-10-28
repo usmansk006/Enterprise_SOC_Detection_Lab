@@ -1,14 +1,21 @@
-# Local Analysis Toolkit
+# Local analysis toolkit
 
-This folder contains practical Python tools for parsing event data, validating Sigma YAML structure, and correlating HTA-related activity.
+This toolkit provides a minimal set of Python utilities for handling event data, validating YAML-like rule structure, and correlating Windows process events.
 
-## Tools
+## Included tools
 
-- `event-parser.py`
-- `rule-validator.py`
-- `event-correlator.py`
-- `tests/`
+- `event-parser.py`: parse JSON and JSONL event input safely
+- `rule-validator.py`: perform basic structural checks on Sigma-style YAML
+- `event-correlator.py`: correlate process events using timestamps and GUIDs when available
 
-## Scope
+## Usage
 
-These tools are designed for local use in a controlled environment and do not execute suspicious code.
+```bash
+python 06-local-analysis-toolkit/event-parser.py --input 04-validation/event-fixtures/sample-mshta-process.json
+python 06-local-analysis-toolkit/rule-validator.py --input 02-detections/DET-001-mshta-execution/det-001-mshta-execution.yml
+python 06-local-analysis-toolkit/event-correlator.py --input 04-validation/event-fixtures/sample-mshta-process.json
+```
+
+## Notes
+
+These scripts are deliberately lightweight and rely on standard library components where possible. Full Sigma compatibility requires a broader validation workflow or a dedicated Sigma parser.

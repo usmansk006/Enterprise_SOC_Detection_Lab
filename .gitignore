@@ -1,43 +1,194 @@
-# .gitignore
+# HTA Sentinel — Windows HTA Threat Detection & Engineering Lab
 
-# Python
-__pycache__/
-*.py[cod]
-*.pyo
-*.pyd
-.venv/
-venv/
-.pytest_cache/
+This repository is a practical, SIEM-independent Windows detection engineering lab focused on HTML Application (`.hta`) execution and related suspicious process behavior. It is designed to help demonstrate real-world blue-team work: telemetry collection, detection engineering, Python-based validation, hypothesis testing, process lineage analysis, and threat hunting.
 
-# Tooling
-.mypy_cache/
-.ruff_cache/
-coverage.xml
-htmlcov/
+## Project objective
 
-# OS files
-.DS_Store
-Thumbs.db
+Build a credible, job-ready portfolio project that shows how to:
 
-# Generated output
-*.log
-*.tmp
-*.bak
-*.orig
+- identify suspicious `mshta.exe` execution chains,
+- validate Windows and Sysmon telemetry requirements,
+- author Sigma-style detection logic,
+- correlate process, command-line, parent-child, and network activity,
+- implement local Python validation and correlation tooling,
+- and document detection quality, limitations, and operational assumptions honestly.
 
-# Local lab artifacts
-*.evtx
-*.pcap
-*.zip
-*.rar
-*.7z
-*.csv~
+## What this repository contains
 
-# Optional evidence that should stay out of public repos
-screenshots/private/
-artifacts/private/
-results/private/
+- a local-first Windows lab design for secure telemetry validation,
+- a curated catalog of HTA-focused detections (DET-001 through DET-010),
+- Sigma and Windows event-query examples for rule development,
+- local Python scripts for parsing and correlating event data,
+- evidence and reporting templates, 
+- detection-quality documentation covering false positives and limitations,
+- and a clear distinction between validated content and planned or unexecuted work.
 
-# Editor settings
-.vscode/
-.idea/
+## Repository status
+
+| Area | Status | Notes |
+| --- | --- | --- |
+| Repository inspection | Implemented | Existing material reviewed and preserved |
+| Legacy Wazuh content | Preserved | Kept where useful and clearly delineated |
+| HTA project identity | Implemented | Reframed around local detection engineering |
+| Root documentation | Implemented | Updated to reflect project scope |
+| Lab setup guidance | Implemented | Includes Sysmon and telemetry requirements |
+| Detection catalog | Implemented | 10 HTA-related detection hypotheses documented |
+| Sigma rule references | Implemented | Example rules and logic documented |
+| Python toolkit | Implemented | Parser, validator, and correlator included |
+| Validation framework | Implemented | Synthetic fixtures and test matrix included |
+| Threat hunting playbooks | Implemented | Investigation workflow documented |
+| Evidence and reporting | Implemented | Templates and standards included |
+| Live Windows validation | Not run | Requires authorized lab execution |
+
+## Repository structure
+
+```text
+Enterprise_SOC_Detection_Lab/
+├── README.md
+├── LICENSE
+├── DISCLAIMER.md
+├── CONTRIBUTING.md
+├── .gitignore
+├── 01-lab-setup/
+│   ├── README.md
+│   ├── windows-lab.md
+│   ├── telemetry-requirements.md
+│   ├── sysmon-configuration.xml
+│   └── installation-and-verification.md
+├── 02-detections/
+│   ├── README.md
+│   ├── DET-001-mshta-execution/
+│   ├── DET-002-remote-hta-reference/
+│   ├── DET-003-inline-script-patterns/
+│   ├── DET-004-suspicious-parent-process/
+│   ├── DET-005-suspicious-child-process/
+│   ├── DET-006-user-writable-path/
+│   ├── DET-007-network-activity/
+│   ├── DET-008-related-file-creation/
+│   ├── DET-009-suspicious-command-line/
+│   └── DET-010-correlated-hta-behavior/
+├── 03-detection-rules/
+│   ├── README.md
+│   ├── sigma/
+│   ├── windows-event-queries/
+│   ├── powershell/
+│   └── correlation-logic/
+├── 04-validation/
+│   ├── README.md
+│   ├── test-matrix.csv
+│   ├── positive-tests/
+│   ├── negative-tests/
+│   ├── regression-tests/
+│   ├── event-fixtures/
+│   └── results/
+├── 05-threat-hunting/
+│   ├── README.md
+│   ├── hunting-queries/
+│   ├── process-tree-analysis.md
+│   └── investigation-playbook.md
+├── 06-local-analysis-toolkit/
+│   ├── README.md
+│   ├── event-parser.py
+│   ├── rule-validator.py
+│   ├── event-correlator.py
+│   └── tests/
+├── 07-evidence/
+│   ├── README.md
+│   ├── event-samples/
+│   ├── screenshots/
+│   ├── timelines/
+│   └── validation-reports/
+├── 08-detection-quality/
+│   ├── README.md
+│   ├── coverage-matrix.csv
+│   ├── false-positive-analysis.md
+│   ├── detection-gaps.md
+│   └── limitations.md
+├── 09-reports/
+│   ├── README.md
+│   ├── detection-catalog.md
+│   ├── mitre-attack-mapping.md
+│   └── final-project-report.md
+├── 10-legacy-detections/
+│   └── README.md
+├── docs/
+│   ├── architecture.md
+│   ├── setup-guide.md
+│   ├── usage-guide.md
+│   ├── validation-methodology.md
+│   └── troubleshooting.md
+├── 01-lab/
+├── 02-detections-old/
+├── 03-threat-hunting/
+├── 04-Incident-Investigations/
+├── 05-detection-engineering/
+├── 06-incident-response/
+├── 07-forensics/
+├── 08-network-security/
+├── 09-threat-intelligence/
+├── 10-scripts/
+├── 11-metrics/
+├── 12-assets/
+├── 13-reports/
+├── 14-screenshots/
+└── progress-checklist.md
+```
+
+## Important project boundaries
+
+This project is intentionally local-first and SIEM-independent. It does not require Wazuh, Splunk, Elastic, Microsoft Sentinel, or another commercial platform to be operational for the core detection engineering workflow.
+
+Sigma rules are documentation and logic artifacts, not an execution engine. A compatible Sigma conversion or processing environment may still be required in an operational pipeline.
+
+## Safe use
+
+- Use only in authorized lab or isolated test environments.
+- Do not execute unknown HTA files outside a controlled environment.
+- Treat findings as hypotheses until confirmed by telemetry and investigation.
+- Never claim telemetry coverage, detection efficacy, or operational success without appropriate evidence.
+
+## Project roadmap
+
+### Implemented
+
+- repository identity and HTA focus update,
+- local lab and Sysmon documentation,
+- detection catalog (DET-001 to DET-010),
+- Sigma and Windows event-query examples,
+- Python validation toolkit,
+- synthetic validation fixtures and matrix,
+- threat hunting and evidence documentation,
+- detection quality and coverage guidance.
+
+### Planned
+
+- live Windows validation against authorized lab telemetry,
+- tuning of rule thresholds using observed event patterns,
+- expansion of synthetic fixtures into broader detection regression tests,
+- additional process, script, and investigative use-case coverage.
+
+## Documentation and references
+
+- MITRE ATT&CK T1218.005: `mshta.exe` abuse and script execution
+- Sigma HQ documentation: https://sigmahq.io/
+- Sysmon documentation: https://learn.microsoft.com/en-us/sysinternals/downloads/sysmon
+
+## Contributing
+
+See `CONTRIBUTING.md`.
+
+## Disclaimer
+
+See `DISCLAIMER.md`.
+
+## License
+
+This project is distributed under the MIT License. See `LICENSE`.
+
+## Validation status
+
+The repository includes synthetic validation assets and local Python checks. The project has not yet been executed against live Windows telemetry in an authorized lab environment, so all live detection testing remains explicitly marked as unvalidated.
+
+---
+
+This repository is intended for defensive security learning, detection engineering, and authorized technical validation. It is not a substitute for operational security tooling or a guarantee of detection coverage in any environment.

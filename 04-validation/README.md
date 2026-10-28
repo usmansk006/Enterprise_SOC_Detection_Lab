@@ -1,16 +1,10 @@
-# Validation Framework
+# Correlation logic notes
 
-This directory stores the formal validation matrix, synthetic fixtures, and artifact expectations.
+Correlation should prioritize:
 
-## Structure
+- `ProcessGuid` when available,
+- `ProcessId` and `ParentProcessId` within a limited time window,
+- `CommandLine` and `Image` consistency,
+- and related file or network telemetry.
 
-- `test-matrix.csv`: end-to-end validation matrix
-- `positive-tests/`: expected suspicious activity cases
-- `negative-tests/`: expected benign activity cases
-- `regression-tests/`: stability checks
-- `event-fixtures/`: synthetic event records used in tests
-- `results/`: results and evidence references
-
-## Status expectations
-
-Live Windows validation has not been performed in this environment. Any test marked as `NOT_RUN` must remain clearly labeled as such.
+Do not rely on `PID` alone across long time windows, because process IDs may be reused and context can be misleading. Use the combination of `ProcessGuid`, timestamps, and correlated events when possible.

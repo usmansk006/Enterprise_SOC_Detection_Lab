@@ -1,0 +1,25 @@
+title: DET-006-user-writable-path
+id: 9d487227-ea9b-4318-a4c0-75c88a8cb4a9
+status: experimental
+description: Detects mshta.exe execution from user-writable or temporary paths where script staging is likely.
+author: HTA Sentinel
+date: 2026-10-28
+logsource:
+  product: windows
+  category: process_creation
+detection:
+  selection:
+    Image|endswith: '\mshta.exe'
+    CommandLine|contains:
+      - '\AppData\'
+      - '\Temp\'
+      - '\Downloads\'
+      - '\Desktop\'
+      - '\Users\'
+  condition: selection
+falsepositives:
+  - Scheduled user workflows or locally generated HTA support pages
+level: medium
+tags:
+  - attack.execution
+  - attack.t1218.005

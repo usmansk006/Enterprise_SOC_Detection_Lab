@@ -1,23 +1,17 @@
-# Validation Methodology
+# Usage guide
 
-The repository uses a layered validation model.
+## Read the root README
 
-## Validation layers
+Begin with `README.md` to understand the project architecture, safety boundaries, and scope.
 
-1. Schema and syntax checks for YAML and Python code
-2. Input validation for parser and correlation scripts
-3. Unit tests for normal, malformed, and boundary conditions
-4. detection rule review against telemetry assumptions
-5. scenario-based synthetic fixtures and negative tests
-6. honest live validation status reporting
+## Review detection docs
 
-## Status labels
+Use the `02-detections/` content to understand the detection hypotheses and telemetry assumptions.
 
-- `IMPLEMENTED`: available in repository with documentation and code
-- `TESTED`: unit tests or fixtures executed successfully in this environment
-- `NOT_RUN`: live lab testing not performed
-- `PLANNED`: conceptual work not yet implemented
+## Validate locally
 
-## Evidence expectations
+Use the scripts under `06-local-analysis-toolkit/` to parse and correlate event data and validate rule structure.
 
-Each detection or test case should tie back to a fixture or documented procedure. Synthetic data must be clearly labeled as synthetic and never presented as operational evidence.
+## Report results honestly
+
+Document whether a test was synthetic, lab-based, or not run. Do not mark live validation as passed without evidence.

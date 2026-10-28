@@ -1,23 +1,20 @@
-# Troubleshooting
+# Validation methodology
 
-## Common issues
+## Validation layers
 
-### Python dependency errors
+- syntax and parser validation,
+- YAML structure validation,
+- synthetic event processing,
+- correlation checks,
+- and a documented live lab workflow for authorized execution.
 
-If `yaml` or `pytest` is missing, install the relevant packages explicitly and re-run validation.
+## Standard
 
-### Sigma files do not validate
+The project does not claim detection effectiveness without evidence. Validation results should clearly differentiate:
 
-Review structure, required fields, and unsupported fields. This toolkit performs structural validation, not full Sigma engine validation.
+- not run,
+- synthetic validation,
+- lab validation,
+- and production or host-level evidence.
 
-### Missing telemetry fields
-
-Some detections require Sysmon process creation fields and Security log fields that may not be available in every host configuration.
-
-### Correlation returns too many results
-
-Use a small time window and require stable identifiers such as process GUID or session host + PID when available.
-
-## Safe operating posture
-
-Do not assume detections are complete because the rule is syntactically valid. Telemetry quality and field availability are central to real-world effectiveness.
+This helps maintain credibility for a portfolio project and aligns with defensible detection engineering practice.

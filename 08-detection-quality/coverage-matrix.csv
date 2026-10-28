@@ -1,0 +1,16 @@
+# Coverage Matrix
+
+This file records the detection coverage for the HTA detection set.
+
+| Detection | Coverage Area | Telemetry Needed | Confidence | Validation Status |
+| --- | --- | --- | --- | --- |
+| DET-001 | `mshta.exe` process execution | Sysmon/Windows Security logs | Medium | Prototype |
+| DET-002 | Remote HTA references | command line + network | Medium | Prototype |
+| DET-003 | Inline script indicators | command line + script data | Medium | Prototype |
+| DET-004 | Parent process anomalies | Sysmon process lineage | Medium | Prototype |
+| DET-005 | Child process anomalies | Sysmon process lineage | Medium | Prototype |
+| DET-006 | Temp/user-writable path execution | file path + process creation | Medium | Prototype |
+| DET-007 | Relevant network activity | network event telemetry | Medium | Prototype |
+| DET-008 | Related file creation | file creation telemetry | Medium | Prototype |
+| DET-009 | Obfuscated command-line patterns | command line + encoding indicators | Medium | Prototype |
+| DET-010 | Multi-event correlation | process and file events | High if telemetry is complete | Prototype |

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Sysmon schemaversion="4.90">
+  <EventFiltering>
+    <ProcessCreate onmatch="include">
+      <Image condition="is">C:\Windows\System32\mshta.exe</Image>
+      <Image condition="is">C:\Windows\System32\cmd.exe</Image>
+      <Image condition="is">C:\Windows\System32\powershell.exe</Image>
+      <Image condition="is">C:\Windows\System32\rundll32.exe</Image>
+      <Image condition="is">C:\Windows\System32\wscript.exe</Image>
+      <Image condition="is">C:\Windows\System32\cscript.exe</Image>
+      <Image condition="is">C:\Windows\System32\wmic.exe</Image>
+    </ProcessCreate>
+    <NetworkConnect onmatch="include">
+      <Protocol condition="is">tcp</Protocol>
+      <Protocol condition="is">udp</Protocol>
+    </NetworkConnect>
+    <FileCreate onmatch="include">
+      <TargetFilename condition="contains">.hta</TargetFilename>
+      <TargetFilename condition="contains">.js</TargetFilename>
+      <TargetFilename condition="contains">.vbs</TargetFilename>
+      <TargetFilename condition="contains">.ps1</TargetFilename>
+    </FileCreate>
+  </EventFiltering>
+</Sysmon>

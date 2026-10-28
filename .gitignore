@@ -1,0 +1,43 @@
+# .gitignore
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.venv/
+venv/
+.pytest_cache/
+
+# Tooling
+.mypy_cache/
+.ruff_cache/
+coverage.xml
+htmlcov/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Generated output
+*.log
+*.tmp
+*.bak
+*.orig
+
+# Local lab artifacts
+*.evtx
+*.pcap
+*.zip
+*.rar
+*.7z
+*.csv~
+
+# Optional evidence that should stay out of public repos
+screenshots/private/
+artifacts/private/
+results/private/
+
+# Editor settings
+.vscode/
+.idea/
